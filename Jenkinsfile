@@ -3,10 +3,14 @@ node{
         checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'c6d04627-b65d-4d9e-9116-3915071ad7af', url: 'http://212.129.149.40/171250576_justdevnoops/backend-oasis.git']]])
     }
     stage('mvn test'){
-        sh "mvn test"
+        withMaven(maven: 'maven') {
+                sh "mvn test"
+        }
     }
     stage('mvn build'){
-        sh "mvn clean install -Dmaven.test.skip=true"
+        withMaven(maven: 'maven') {
+                sh "mvn clean install -Dmaven.test.skip=true"
+        }
     }
     stage('mvn run'){
         sh "cp -f target/oasis-0.0.1-SNAPSHOT.jar /home/lxc/webapp/backend-oasis.jar"
