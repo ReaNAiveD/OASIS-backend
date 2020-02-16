@@ -13,7 +13,9 @@ node{
         }
     }
     stage('mvn run'){
-        sh "cp -f target/oasis-0.0.1-SNAPSHOT.jar /home/lxc/webapp/backend-oasis.jar"
-        sh "/home/lxc/backend_start.sh"
+		withEnv(['JENKINS_NODE_COOKIE=dontkillme']) {
+			sh "cp -f target/oasis-0.0.1-SNAPSHOT.jar /home/lxc/webapp/backend-oasis.jar"
+			sh "/home/lxc/backend_start.sh"
+		}
     }
 }
