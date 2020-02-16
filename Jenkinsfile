@@ -14,6 +14,7 @@ node{
     }
     stage('mvn run'){
         sh "cp -f target/oasis-0.0.1-SNAPSHOT.jar /home/lxc/webapp/backend-oasis.jar"
+		sh "BUILD_ID=dontKillMe"
         sh "/home/lxc/backend_start.sh"
     }
 }
