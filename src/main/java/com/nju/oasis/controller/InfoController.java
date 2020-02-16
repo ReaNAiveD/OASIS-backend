@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class InfoController {
 
+    @GetMapping("/")
+    public String index(){
+        return "info";
+    }
+
     @GetMapping("/info")
     public String info(){
         return "info";
@@ -19,6 +24,6 @@ public class InfoController {
 
     @GetMapping("/data")
     public String data(){
-        return "data";
+        return "info";
     }
 }
