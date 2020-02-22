@@ -2,10 +2,7 @@ package com.nju.oasis.domain;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * @author: lxc
@@ -22,7 +19,8 @@ public class Author {
     private String name;
     private String firstName;
     private String lastName;
-    private String authorAffiliation;
+    @Column(name = "author_affiliation")
+    private String affiliation;
     private String authorKeywords;
     private String ieeeId;
 

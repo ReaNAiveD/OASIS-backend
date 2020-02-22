@@ -17,8 +17,28 @@ import org.springframework.transaction.annotation.Transactional;
 public interface DocumentRepository extends JpaRepository<Document, Integer> {
 
 
+    /*
+    插入文章-作者关系
+     */
     @Modifying
     @Transactional
     @Query(value = "insert into document_author (document_id, author_id) values (?1, ?2)", nativeQuery = true)
-    public void insertDocuAuthorRel(int docuId, int authorId);
+    void insertDocuAuthorRel(int docuId, int authorId);
+
+    /*
+    danger!!!删表
+     */
+    @Modifying
+    @Transactional
+    void deleteAll();
+
+    /*
+    danger!!!删表
+     */
+    @Modifying
+    @Transactional
+    @Query(value = "delete from document_author", nativeQuery = true)
+    void deleteTableDocumentAuthor();
+
+
 }
