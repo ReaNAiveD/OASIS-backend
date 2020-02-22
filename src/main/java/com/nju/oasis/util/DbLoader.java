@@ -44,12 +44,16 @@ public class DbLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        new Thread(this::loadData_1).start();
+        //加载数据库
+//        new Thread(this::loadData_1).start();
     }
 
     private void loadData_1() {
 
-        //清除表格
+        int count = 0;
+
+
+//        清除表格
         authorRepository.deleteAll();
         documentRepository.deleteAll();
         documentRepository.deleteTableDocumentAuthor();
@@ -61,10 +65,16 @@ public class DbLoader implements CommandLineRunner {
             /*
             在遇到过长不合法属性的时候继续工作
              */
+            count++;
+//            //拦截器
+//            if(count<501){
+//                continue;
+//            }
+            System.out.println(count + ": document processed.");
             try {
                 processDocument(documentObject);
             } catch (Exception e) {
-                System.out.println("Exception occurred.\n");
+                System.out.println("Exception occurred.");
                 e.printStackTrace();
             }
         }
