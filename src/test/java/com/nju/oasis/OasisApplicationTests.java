@@ -3,6 +3,7 @@ package com.nju.oasis;
 import com.nju.oasis.domain.Author;
 import com.nju.oasis.repository.AuthorRepository;
 import com.nju.oasis.repository.DocumentRepository;
+import com.nju.oasis.service.DocumentService;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,8 @@ class OasisApplicationTests {
     DocumentRepository documentRepository;
     @Autowired
     AuthorRepository authorRepository;
+    @Autowired
+    DocumentService documentService;
 
     @Test
     void contextLoads() {
@@ -40,10 +43,16 @@ class OasisApplicationTests {
         }
     }
 
+    @Test
+    void testDocument_3(){
+        System.out.println(documentService.getDocumentDetail(4327));
+    }
+
     @Ignore
     @Test
     void testAuthor_1(){
         Author author = authorRepository.findById(10450);
         System.out.println(author);
     }
+
 }

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author: lxc
  * @email 171250576@smail.nju.edu.cn
@@ -14,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 public interface RefArticleRepository extends JpaRepository<RefArticle, Integer> {
+
+    List<RefArticle> findAllByDocumentId(int documentId);
 
     /*
     删除表
