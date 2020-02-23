@@ -21,6 +21,8 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
     //根据name查找作者
     Optional<Author> findAuthorByName(String name);
 
+    Author findById(int authorId);
+
     //根据id修改作者的作者关键字
     @Modifying
     @Transactional
