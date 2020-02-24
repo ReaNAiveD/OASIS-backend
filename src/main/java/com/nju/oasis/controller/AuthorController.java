@@ -20,7 +20,6 @@ public class AuthorController {
     AuthorService authorService;
 
     @GetMapping("/detail")
-    @CrossOrigin(origins = {"http://localhost:8080", "http://47.100.97.17:8088/"})
     @ResponseBody
     public AuthorVO getAuthorDetail(@RequestParam("id") int id){
         return authorService.getAuthorDetail(id);

@@ -1,6 +1,7 @@
 package com.nju.oasis.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * @author: lxc
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class StatisticsController {
+
+//    @GetMapping("/top/author")
 
 
 }
