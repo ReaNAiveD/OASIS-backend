@@ -3,16 +3,17 @@ package com.nju.oasis.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.nju.oasis.domain.Author;
+import com.nju.oasis.domain.AuthorStatistics;
 import com.nju.oasis.domain.Document;
 import com.nju.oasis.domain.RefArticle;
 import com.nju.oasis.repository.AuthorRepository;
+import com.nju.oasis.repository.AuthorStatisticsRepository;
 import com.nju.oasis.repository.DocumentRepository;
 import com.nju.oasis.repository.RefArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
+import java.util.*;
 
 
 /**
@@ -30,15 +31,18 @@ public class DbLoader implements CommandLineRunner {
     AuthorRepository authorRepository;
     DocumentRepository documentRepository;
     RefArticleRepository refArticleRepository;
+    AuthorStatisticsRepository authorStatisticsRepository;
 
 
     @Autowired
     public DbLoader(AuthorRepository authorRepository,
                     DocumentRepository documentRepository,
-                    RefArticleRepository refArticleRepository) {
+                    RefArticleRepository refArticleRepository,
+                    AuthorStatisticsRepository authorStatisticsRepository) {
         this.authorRepository = authorRepository;
         this.documentRepository = documentRepository;
         this.refArticleRepository = refArticleRepository;
+        this.authorStatisticsRepository = authorStatisticsRepository;
     }
 
 
@@ -46,6 +50,9 @@ public class DbLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         //加载数据库
 //        new Thread(this::loadData_1).start();
+        //加载作者统计信息
+//        new Thread(this::loadAuthorStatistics).start();
+
     }
 
     private void loadData_1() {
@@ -152,5 +159,61 @@ public class DbLoader implements CommandLineRunner {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    /*
+    加载作者统计信息
+     */
+    private void loadAuthorStatistics(){
+        authorStatisticsRepository.deleteAll();
+
+        List<Author> authorList = authorRepository.findAll();
+        for(Author author: authorList){
+            AuthorStatistics authorStatistics = new AuthorStatistics();
+            //复制信息
+            authorStatistics.setAuthorId(author.getId());
+            authorStatistics.setName(author.getName());
+            authorStatistics.setAuthorKeywords(author.getAuthorKeywords());
+            authorStatistics.setAffiliation(author.getAffiliation());
+            //计算发表数量
+            int documentCount = documentRepository.getDocumentsByAuthorId(author.getId()).size();
+            authorStatistics.setDocumentCount(documentCount);
+            //计算作者专业领域
+            String domains = getDomains(author.getAuthorKeywords());
+            authorStatistics.setDomains(domains);
+            authorStatisticsRepository.save(authorStatistics);
+        }
+    }
+
+    private String getDomains(String authorKeywords){
+        String[] keywordList = authorKeywords.split("[;,]");
+        HashMap<String, Integer> keywordMap = new HashMap<>();
+        for(String keyword: keywordList){
+            if(keyword.length()!=0){
+                if(keywordMap.containsKey(keyword)){
+                    int count = keywordMap.get(keyword);
+                    keywordMap.replace(keyword, count + 1);
+                }
+                else{
+                    keywordMap.put(keyword, 1);
+                }
+            }
+        }
+        Set<Map.Entry<String, Integer>> entries = keywordMap.entrySet();
+        //將Set集合轉為List集合，為了實用工具類的排序方法
+        List<Map.Entry<String, Integer>> list = new ArrayList<>(entries);
+        //使用Collections工具類對list進行排序
+        list.sort((o1, o2) -> {
+            //按照count倒敘排列
+            return o2.getValue() - o1.getValue();
+        });
+        //將list中的數據存入LinkedHashMap中
+        String domains = "";
+        for(int i=0;i<10 && i<list.size();i++){
+            domains += list.get(i).getKey() + "(" + list.get(i).getValue() + ");";
+        }
+        System.out.println(domains);
+        return domains;
     }
 }

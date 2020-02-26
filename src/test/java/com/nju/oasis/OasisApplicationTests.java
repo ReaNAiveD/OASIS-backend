@@ -1,8 +1,11 @@
 package com.nju.oasis;
 
 import com.nju.oasis.domain.Author;
+import com.nju.oasis.domain.AuthorStatistics;
 import com.nju.oasis.repository.AuthorRepository;
+import com.nju.oasis.repository.AuthorStatisticsRepository;
 import com.nju.oasis.repository.DocumentRepository;
+import com.nju.oasis.service.AuthorService;
 import com.nju.oasis.service.DocumentService;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
@@ -23,6 +26,10 @@ class OasisApplicationTests {
     AuthorRepository authorRepository;
     @Autowired
     DocumentService documentService;
+    @Autowired
+    AuthorService authorService;
+    @Autowired
+    AuthorStatisticsRepository authorStatisticsRepository;
 
     @Test
     void contextLoads() {
@@ -43,6 +50,7 @@ class OasisApplicationTests {
         }
     }
 
+    @Ignore
     @Test
     void testDocument_3(){
         System.out.println(documentService.getDocumentDetail(4327));
@@ -53,6 +61,21 @@ class OasisApplicationTests {
     void testAuthor_1(){
         Author author = authorRepository.findById(10450);
         System.out.println(author);
+    }
+
+    @Ignore
+    @Test
+    void testAuthorStatistics_1(){
+        AuthorStatistics authorStatistics = new AuthorStatistics();
+        authorStatistics.setDocumentCount(8);
+        authorStatisticsRepository.save(authorStatistics);
+    }
+
+    @Ignore
+    @Test
+    void testAuthorStatistics_2(){
+        List<AuthorStatistics> authorStatistics = authorService.getAuthorsMaxDocumentCount(5);
+        System.out.println(authorStatistics);
     }
 
 }

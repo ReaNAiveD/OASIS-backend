@@ -2,14 +2,19 @@ package com.nju.oasis.service;
 
 import com.nju.oasis.controller.VO.AuthorVO;
 import com.nju.oasis.domain.Author;
+import com.nju.oasis.domain.AuthorStatistics;
 import com.nju.oasis.domain.Document;
 import com.nju.oasis.repository.AuthorRepository;
+import com.nju.oasis.repository.AuthorStatisticsRepository;
 import com.nju.oasis.repository.DocumentRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +30,8 @@ public class AuthorService {
     AuthorRepository authorRepository;
     @Autowired
     DocumentRepository documentRepository;
+    @Autowired
+    AuthorStatisticsRepository authorStatisticsRepository;
 
     public AuthorVO getAuthorDetail(int id){
         //获取基本信息
@@ -54,6 +61,14 @@ public class AuthorService {
             }
         }
         List<Author> authorList = authorRepository.findAllById(coworkers);
+        return authorList;
+    }
+
+    public List<AuthorStatistics> getAuthorsMaxDocumentCount(int num){
+
+        Pageable pageable = PageRequest.of(0, num, Sort.Direction.DESC, "documentCount");
+        Page<AuthorStatistics> firstPage = authorStatisticsRepository.findAll(pageable);
+        List<AuthorStatistics> authorList = firstPage.toList();
         return authorList;
     }
 }

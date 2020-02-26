@@ -1,7 +1,12 @@
 package com.nju.oasis.controller;
 
+import com.nju.oasis.domain.AuthorStatistics;
+import com.nju.oasis.service.AuthorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 /**
  * @author: lxc
@@ -11,8 +16,12 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @Controller
 public class StatisticsController {
+    @Autowired
+    AuthorService authorService;
 
-//    @GetMapping("/top/author")
-
+    @GetMapping("/top/author")
+    public List<AuthorStatistics> getAuthorsWithMaxDocumentCount(int num){
+        return authorService.getAuthorsMaxDocumentCount(num);
+    }
 
 }

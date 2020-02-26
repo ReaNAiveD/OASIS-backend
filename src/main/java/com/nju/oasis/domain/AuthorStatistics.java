@@ -11,11 +11,12 @@ import javax.persistence.*;
  * @description:
  */
 @Data
-//@Entity
+@Entity
 public class AuthorStatistics {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private int authorId;
     private String name;
     @Column(name = "author_affiliation")
     private String affiliation;
