@@ -23,7 +23,7 @@ public class StatisticsController {
 
     @GetMapping("/top/author")
     @ResponseBody
-    public List<AuthorStatistics> getAuthorsWithMaxDocumentCount(@RequestParam(value = "num", defaultValue = "5") int num){
+    public List<AuthorStatistics> getAuthorsWithMaxDocumentCount(@RequestParam("num") int num){
         return authorService.getAuthorsMaxDocumentCount(num);
     }
 
