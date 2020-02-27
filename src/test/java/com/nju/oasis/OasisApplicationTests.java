@@ -1,5 +1,7 @@
 package com.nju.oasis;
 
+import com.alibaba.fastjson.JSONObject;
+import com.nju.oasis.controller.form.SearchForm;
 import com.nju.oasis.domain.Author;
 import com.nju.oasis.domain.AuthorStatistics;
 import com.nju.oasis.repository.AuthorRepository;
@@ -12,8 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -50,10 +56,26 @@ class OasisApplicationTests {
         }
     }
 
-    @Ignore
     @Test
     void testDocument_3(){
-        System.out.println(documentService.getDocumentDetail(4327));
+//        System.out.println(documentService.getDocumentDetail(4327));
+//        System.out.println(documentRepository.selectAllId());
+//        JSONObject jsonObject = JSONObject.parseObject("{\"title\":\"\",\"author\":\"hello\", \"yearFrom\":null}");
+//
+//        SearchForm searchForm = JSONObject.toJavaObject(jsonObject, SearchForm.class);
+//        System.out.println(searchForm);
+        System.out.println(documentRepository.selectIdsByTitleLike("keynotes"));
+    }
+
+
+    @Ignore
+    @Test
+    void testDocument_4(){
+        List<Integer> idList = new ArrayList<>();
+        idList.add(4320);
+        idList.add(4321);
+        Pageable pageable = PageRequest.of(0,1);
+        System.out.println(documentRepository.findDocumentsByIdIn(idList, pageable).getContent());
     }
 
     @Ignore
@@ -61,6 +83,11 @@ class OasisApplicationTests {
     void testAuthor_1(){
         Author author = authorRepository.findById(10450);
         System.out.println(author);
+    }
+
+    @Ignore
+    @Test
+    void testAuthor_2(){
     }
 
     @Ignore

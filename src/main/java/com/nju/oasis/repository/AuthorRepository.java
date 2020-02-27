@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -30,9 +31,10 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
     @Query("UPDATE Author SET authorKeywords=?2 where id=?1")
     void updateAuthorKeywordsById(int id, String newAuthorKeywords);
 
-    //danger,删表！！！
-    @Modifying
-    @Transactional
-    void deleteAll();
+    @Query("select id from Author where name like %?1%")
+    List<Integer> selectIdsByNameLike(String name);
+
+    @Query("select id from Author where affiliation like %?1%")
+    List<Integer> selectIdsByAffiliation(String affiliation);
 
 }

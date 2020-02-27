@@ -1,6 +1,8 @@
 package com.nju.oasis.repository;
 
 import com.nju.oasis.domain.Document;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,6 +35,9 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     @Query(value = "select document_id from document_author where author_id=?1", nativeQuery = true)
     List<Integer> getDocumentsByAuthorId(int authorId);
 
+    @Query(value = "select document_id from document_author where author_id in ?1", nativeQuery = true)
+    List<Integer> getDocumentsByAuthorIds(List<Integer> authorList);
+
     /*
     根据论文id获得作者id
      */
@@ -58,6 +63,27 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     @Transactional
     @Query(value = "delete from document_author", nativeQuery = true)
     void deleteTableDocumentAuthor();
+
+    /*
+    分页方式，根据id列表获得论文列表
+     */
+    Page<Document> findDocumentsByIdIn(List<Integer> idList, Pageable pageable);
+
+    /*
+    获取所有id
+     */
+    @Query("select id from Document")
+    List<Integer> selectAllId();
+
+    @Query("select id from Document where title like %?1%")
+    List<Integer> selectIdsByTitleLike(String title);
+
+    @Query("select id from Document where docuAbstract like %?1%")
+    List<Integer> selectIdsByAbstractLike(String abstractStr);
+
+    @Query("select id from Document where publicationYear>=?1 and publicationYear<=?2")
+    List<Integer> selectIdsByTime(int yearFrom, int yearTo);
+
 
 
 }

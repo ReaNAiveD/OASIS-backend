@@ -4,7 +4,6 @@ import com.nju.oasis.domain.Author;
 import com.nju.oasis.domain.RefArticle;
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.util.List;
 
 /**
