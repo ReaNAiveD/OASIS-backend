@@ -39,6 +39,9 @@ public class SearchForm {
 
     private String publisher;
 
+    /*
+    会议机构，可以是"ase","icse"或"others"
+     */
     private String conference;
 
     /*
