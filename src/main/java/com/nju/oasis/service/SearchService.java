@@ -68,6 +68,13 @@ public class SearchService {
             List<Integer> idList = searchTime(searchForm.getYearFrom(), searchForm.getYearTo());
             resultIdList.retainAll(idList);
         }
+        //根据会议筛选列表
+        if(searchForm.getConference().equals("ase")){
+            resultIdList = documentRepository.filterIdsByConference(resultIdList, "(ASE)");
+        }
+        else if(searchForm.getConference().equals("icse")){
+            resultIdList = documentRepository.filterIdsByConference(resultIdList, "(ICSE)");
+        }
 
         Pageable pageable;
         if(searchForm.getOrderBy().equals("early")){
@@ -78,6 +85,8 @@ public class SearchService {
             pageable = PageRequest.of(searchForm.getPage(), searchForm.getPageSize(),
                     Sort.Direction.DESC, "publicationYear");
         }
+
+
         Page<Document> documentPage = documentRepository.findDocumentsByIdIn(resultIdList, pageable);
         Page<DocumentVO> resultPage = documentPage.map(target->
                 documentService.getDocumentListItem(target.getId()));

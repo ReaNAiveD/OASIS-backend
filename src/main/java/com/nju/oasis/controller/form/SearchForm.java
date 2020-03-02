@@ -39,6 +39,8 @@ public class SearchForm {
 
     private String publisher;
 
+    private String conference;
+
     /*
     默认为default，可选为early,recent
      */

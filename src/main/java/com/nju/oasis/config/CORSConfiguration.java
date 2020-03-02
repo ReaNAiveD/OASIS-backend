@@ -11,6 +11,8 @@ public class CORSConfiguration {
     private static String[] originsVal = new String[]{
             "localhost:8080",
             "127.0.0.1:8080",
+            "localhost:8081",
+            "127.0.0.1:8081",
             "47.100.97.17:8088",
             "127.0.0.1",
             "localhost",
@@ -21,8 +23,8 @@ public class CORSConfiguration {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        addAllowedOrigins(corsConfiguration);
-//        corsConfiguration.addAllowedOrigin("*");
+//        addAllowedOrigins(corsConfiguration);
+        corsConfiguration.addAllowedOrigin("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
          corsConfiguration.setAllowCredentials(true); // 跨域session共享

@@ -84,6 +84,9 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     @Query("select id from Document where publicationYear>=?1 and publicationYear<=?2")
     List<Integer> selectIdsByTime(int yearFrom, int yearTo);
 
-
-
+    /*
+    按照会议筛选
+     */
+    @Query("select id from Document where id in ?1 and publicationTitle like %?2")
+    List<Integer> filterIdsByConference(List<Integer> targetList, String conference);
 }
