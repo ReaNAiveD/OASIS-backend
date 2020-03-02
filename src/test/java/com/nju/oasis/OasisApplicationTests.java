@@ -56,6 +56,7 @@ class OasisApplicationTests {
         }
     }
 
+    @Ignore
     @Test
     void testDocument_3(){
 //        System.out.println(documentService.getDocumentDetail(4327));
@@ -76,6 +77,12 @@ class OasisApplicationTests {
         idList.add(4321);
         Pageable pageable = PageRequest.of(0,1);
         System.out.println(documentRepository.findDocumentsByIdIn(idList, pageable).getContent());
+    }
+
+    @Test
+    void testDocument_5(){
+
+        System.out.println(documentService.getDocumentsWithMaxDownloads(5));
     }
 
     @Ignore

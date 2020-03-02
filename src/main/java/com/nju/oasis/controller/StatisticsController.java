@@ -1,7 +1,9 @@
 package com.nju.oasis.controller;
 
+import com.nju.oasis.controller.VO.DocumentVO;
 import com.nju.oasis.domain.AuthorStatistics;
 import com.nju.oasis.service.AuthorService;
+import com.nju.oasis.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +22,19 @@ import java.util.List;
 public class StatisticsController {
     @Autowired
     AuthorService authorService;
+    @Autowired
+    DocumentService documentService;
 
     @GetMapping("/top/author")
     @ResponseBody
     public List<AuthorStatistics> getAuthorsWithMaxDocumentCount(@RequestParam(value = "num", defaultValue = "5") int num){
         return authorService.getAuthorsMaxDocumentCount(num);
+    }
+
+    @GetMapping("/top/document/max_download")
+    @ResponseBody
+    public List<DocumentVO> getDocumentsWithMaxDownloads(@RequestParam(value = "num", defaultValue = "5") int num){
+        return documentService.getDocumentsWithMaxDownloads(num);
     }
 
 }
