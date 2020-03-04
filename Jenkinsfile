@@ -12,6 +12,17 @@ node{
                 sh "mvn clean install -Dmaven.test.skip=true"
         }
     }
+    stage('mvn analyse'){
+        withMaven(maven: 'maven3.5.4') {
+                sh "/home/lxc/jacoco_setting.sh"
+                echo 'This is a jacoco coverage analysis'
+                sh label: '', script: 'mvn org.jacoco:jacoco-maven-plugin:0.8.3:dump -Djacoco.address=127.0.0.1 -Djacoco.port=8082'
+        }
+    }
+
+    stage('jacoco'){
+        jacoco()
+    }
     stage('mvn run'){
 		withEnv(['JENKINS_NODE_COOKIE=dontkillme']) {
 			sh "cp -f target/oasis-0.0.1-SNAPSHOT.jar /home/lxc/webapp/backend-oasis.jar"
