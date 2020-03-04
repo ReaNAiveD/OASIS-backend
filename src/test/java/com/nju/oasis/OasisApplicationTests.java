@@ -79,7 +79,7 @@ class OasisApplicationTests {
         System.out.println(documentRepository.findDocumentsByIdIn(idList, pageable).getContent());
     }
 
-//    @Ignore
+    @Ignore
     @Test
     void testDocument_5(){
 
