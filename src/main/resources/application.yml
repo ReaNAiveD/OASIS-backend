@@ -14,23 +14,23 @@ spring:
       ddl-auto: validate
     show-sql: true
 
-#management:
-#  endpoints:
-#    jmx:
-#      exposure:
-#        include: "*" # 或者设置为promethues，只开放promethues
-#    web:
-#      exposure:
-#        include: "*"
-#  endpoint:
-#    health:
-#      show-details: always
-#  metrics:
-#    export:
-#      datadog:
-#        application-key: ${spring.application.name}
-#    enable:
-#      jvm: true
+management:
+  endpoints:
+    jmx:
+      exposure:
+        include: "*" # 或者设置为promethues，只开放promethues
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      datadog:
+        application-key: ${spring.application.name}
+    enable:
+      jvm: true
 
 info:
   app:
