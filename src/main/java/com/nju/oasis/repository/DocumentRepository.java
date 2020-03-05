@@ -50,6 +50,12 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     Document findById(int documentId);
 
     /*
+    测试方法
+     */
+    @Query(value = "select title from Document where id=?1")
+    String findTitleById(int id);
+
+    /*
     danger!!!删表
      */
     @Modifying
