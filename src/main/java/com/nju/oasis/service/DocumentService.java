@@ -66,10 +66,16 @@ public class DocumentService {
         Instant end = Instant.now();
         Metrics.summary("top_document_download_repository_summary").record(Duration.between(start, end).toMillis());
 
+        start = Instant.now();
         List<DocumentVO> resultList = new ArrayList<>();
         for(Document document: firstPage.getContent()){
+            Instant docItemStart = Instant.now();
             resultList.add(getDocumentListItem(document.getId()));
+            Instant docItemEnd = Instant.now();
+            Metrics.summary("add_to_result_list").record(Duration.between(docItemStart, docItemEnd).toMillis());
         }
+        end = Instant.now();
+        Metrics.summary("add_to_result_list_total").record(Duration.between(start, end).toMillis());
         return resultList;
     }
 }
