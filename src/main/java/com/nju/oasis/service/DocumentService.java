@@ -7,6 +7,7 @@ import com.nju.oasis.domain.RefArticle;
 import com.nju.oasis.repository.AuthorRepository;
 import com.nju.oasis.repository.DocumentRepository;
 import com.nju.oasis.repository.RefArticleRepository;
+import io.micrometer.core.instrument.Metrics;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,11 +60,22 @@ public class DocumentService {
 
     public List<DocumentVO> getDocumentsWithMaxDownloads(int num) {
         Pageable pageable = PageRequest.of(0, num, Sort.Direction.DESC, "totalDownload");
+
+        Instant start = Instant.now();
         Page<Document> firstPage = documentRepository.findAll(pageable);
+        Instant end = Instant.now();
+        Metrics.summary("top_document_download_repository_summary").record(Duration.between(start, end).toMillis());
+
+        start = Instant.now();
         List<DocumentVO> resultList = new ArrayList<>();
         for(Document document: firstPage.getContent()){
+            Instant docItemStart = Instant.now();
             resultList.add(getDocumentListItem(document.getId()));
+            Instant docItemEnd = Instant.now();
+            Metrics.summary("add_to_result_list").record(Duration.between(docItemStart, docItemEnd).toMillis());
         }
+        end = Instant.now();
+        Metrics.summary("add_to_result_list_total").record(Duration.between(start, end).toMillis());
         return resultList;
     }
 }
