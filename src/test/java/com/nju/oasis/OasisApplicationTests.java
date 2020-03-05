@@ -41,13 +41,11 @@ class OasisApplicationTests {
     void contextLoads() {
     }
 
-    @Ignore
     @Test
     void testDocument_1(){
         documentRepository.insertDocuAuthorRel(1,2);
     }
 
-    @Ignore
     @Test
     void testDocument_2(){
         List<Integer> documents = documentRepository.getDocumentsByAuthorId(10450);
@@ -56,7 +54,6 @@ class OasisApplicationTests {
         }
     }
 
-    @Ignore
     @Test
     void testDocument_3(){
 //        System.out.println(documentService.getDocumentDetail(4327));
@@ -69,7 +66,6 @@ class OasisApplicationTests {
     }
 
 
-    @Ignore
     @Test
     void testDocument_4(){
         List<Integer> idList = new ArrayList<>();
@@ -79,26 +75,22 @@ class OasisApplicationTests {
         System.out.println(documentRepository.findDocumentsByIdIn(idList, pageable).getContent());
     }
 
-    @Ignore
     @Test
     void testDocument_5(){
 
         System.out.println(documentService.getDocumentsWithMaxDownloads(5));
     }
 
-    @Ignore
     @Test
     void testAuthor_1(){
         Author author = authorRepository.findById(10450);
         System.out.println(author);
     }
 
-    @Ignore
     @Test
     void testAuthor_2(){
     }
 
-    @Ignore
     @Test
     void testAuthorStatistics_1(){
         AuthorStatistics authorStatistics = new AuthorStatistics();
@@ -106,7 +98,6 @@ class OasisApplicationTests {
         authorStatisticsRepository.save(authorStatistics);
     }
 
-    @Ignore
     @Test
     void testAuthorStatistics_2(){
         List<AuthorStatistics> authorStatistics = authorService.getAuthorsMaxDocumentCount(5);
