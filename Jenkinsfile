@@ -42,6 +42,8 @@ pipeline {
 
         stage('Deploy Docker Container') {
             steps{
+                sh 'docker stop backend-oasis'
+                sh 'docker rm backend-oasis'
                 sh 'docker run --name backend-oasis -d -p 8082:8081 justdevnoops/backend-oasis:$BUILD_NUMBER'
             }
         }
