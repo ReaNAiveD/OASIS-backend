@@ -16,7 +16,7 @@ node{
         withMaven(maven: 'maven3.5.4') {
                 sh "/home/lxc/jacoco_setting.sh"
                 echo 'This is a jacoco coverage analysis'
-                sh label: '', script: 'mvn org.jacoco:jacoco-maven-plugin:0.8.3:dump -Djacoco.address=127.0.0.1 -Djacoco.port=8082'
+                sh label: '', script: 'mvn org.jacoco:jacoco-maven-plugin:0.8.3:dump -Djacoco.address=101.37.80.37 -Djacoco.port=8082'
         }
     }
 
