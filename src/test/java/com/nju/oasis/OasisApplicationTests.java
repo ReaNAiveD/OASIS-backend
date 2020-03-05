@@ -41,6 +41,7 @@ class OasisApplicationTests {
     void contextLoads() {
     }
 
+    @Ignore
     @Test
     void testDocument_1(){
         documentRepository.insertDocuAuthorRel(1,2);
