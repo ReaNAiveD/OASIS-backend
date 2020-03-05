@@ -22,6 +22,7 @@ public class ServiceMonitor {
         Object returnMessage = joinPoint.proceed();
         Instant end = Instant.now();
         Metrics.timer("top_document_download").record(Duration.between(start, end));
+        Metrics.summary("top_document_download_summary").record(Duration.between(start, end).toMillis());
         return returnMessage;
     }
 
