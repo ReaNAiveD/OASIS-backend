@@ -52,8 +52,7 @@ public class DocumentService {
         DocumentVO documentVO = new DocumentVO();
         Document document = documentRepository.findById(documentId);
         BeanUtils.copyProperties(document, documentVO);
-        List<Integer> authorIds = documentRepository.getAuthorsIdByDocumentId(documentId);
-        List<Author> authorList = authorRepository.findAllById(authorIds);
+        List<Author> authorList = authorRepository.getAuthorsByDocumentId(document.getId());
         documentVO.setAuthors(authorList);
         return documentVO;
     }
