@@ -38,8 +38,9 @@ public class SearchController {
         if(StringUtils.isEmpty(searchForm.getOrderBy())){
             searchForm.setOrderBy("default");
         }
+        
         if(StringUtils.isEmpty(searchForm.getConference())){
-            searchForm.setConference("ase");
+            searchForm.setConference("all");
         }
 
         return searchService.searchDocument(searchForm);

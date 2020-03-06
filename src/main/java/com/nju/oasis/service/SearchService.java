@@ -73,9 +73,12 @@ public class SearchService {
         else if(searchForm.getConference().equals("icse")){
             resultIdList = documentRepository.filterIdsByConference(resultIdList, "(ICSE)");
         }
-        else {
+        else if(searchForm.getConference().equals("others")){
             //others的筛选
             resultIdList = documentRepository.filterIdsByConference(resultIdList, "Engineering");
+        }
+        else{
+            //pass
         }
 
         Pageable pageable;
