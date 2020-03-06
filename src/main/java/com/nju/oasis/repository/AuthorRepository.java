@@ -37,4 +37,7 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
     @Query("select id from Author where affiliation like %?1%")
     List<Integer> selectIdsByAffiliation(String affiliation);
 
+    @Query(value = "select id, name, first_name, last_name, author_affiliation, author_keywords, ieee_id from author where author.id in (select author_id from document_author where document_id=?1)", nativeQuery = true)
+    List<Author> getAuthorsByDocumentId(int documentId);
+
 }

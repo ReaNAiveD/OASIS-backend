@@ -40,7 +40,7 @@ public class DocumentService {
         DocumentVO documentVO = new DocumentVO();
         Document document = documentRepository.findById(documentId);
         BeanUtils.copyProperties(document, documentVO);
-        List<Integer> authorIds = documentRepository.getAuthorsByDocumentId(documentId);
+        List<Integer> authorIds = documentRepository.getAuthorsIdByDocumentId(documentId);
         List<Author> authorList = authorRepository.findAllById(authorIds);
         documentVO.setAuthors(authorList);
         List<RefArticle> refArticles = refArticleRepository.findAllByDocumentId(documentId);
@@ -52,7 +52,7 @@ public class DocumentService {
         DocumentVO documentVO = new DocumentVO();
         Document document = documentRepository.findById(documentId);
         BeanUtils.copyProperties(document, documentVO);
-        List<Integer> authorIds = documentRepository.getAuthorsByDocumentId(documentId);
+        List<Integer> authorIds = documentRepository.getAuthorsIdByDocumentId(documentId);
         List<Author> authorList = authorRepository.findAllById(authorIds);
         documentVO.setAuthors(authorList);
         return documentVO;
@@ -70,7 +70,11 @@ public class DocumentService {
         List<DocumentVO> resultList = new ArrayList<>();
         for(Document document: firstPage.getContent()){
             Instant docItemStart = Instant.now();
-            resultList.add(getDocumentListItem(document.getId()));
+            DocumentVO documentVO = new DocumentVO();
+            BeanUtils.copyProperties(document, documentVO);
+            List<Author> authorList = authorRepository.getAuthorsByDocumentId(document.getId());
+            documentVO.setAuthors(authorList);
+            resultList.add(documentVO);
             Instant docItemEnd = Instant.now();
             Metrics.summary("add_to_result_list").record(Duration.between(docItemStart, docItemEnd).toMillis());
         }

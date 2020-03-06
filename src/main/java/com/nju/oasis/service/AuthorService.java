@@ -53,7 +53,7 @@ public class AuthorService {
         List<Integer> documents = documentRepository.getDocumentsByAuthorId(id);
         List<Integer> coworkers = new ArrayList<>();
         for(int documentId: documents){
-            List<Integer> authorIds = documentRepository.getAuthorsByDocumentId(documentId);
+            List<Integer> authorIds = documentRepository.getAuthorsIdByDocumentId(documentId);
             for(int authorId: authorIds){
                 if(!coworkers.contains(authorId) && authorId!=id){
                     coworkers.add(authorId);

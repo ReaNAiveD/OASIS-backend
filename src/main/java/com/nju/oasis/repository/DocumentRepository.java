@@ -1,5 +1,6 @@
 package com.nju.oasis.repository;
 
+import com.nju.oasis.domain.Author;
 import com.nju.oasis.domain.Document;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +43,7 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     根据论文id获得作者id
      */
     @Query(value = "select author_id from document_author where document_id=?1", nativeQuery = true)
-    List<Integer> getAuthorsByDocumentId(int documentId);
+    List<Integer> getAuthorsIdByDocumentId(int documentId);
 
     /*
     根据id获得论文
