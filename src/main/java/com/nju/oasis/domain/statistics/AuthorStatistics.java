@@ -1,4 +1,4 @@
-package com.nju.oasis.domain;
+package com.nju.oasis.domain.statistics;
 
 import lombok.Data;
 

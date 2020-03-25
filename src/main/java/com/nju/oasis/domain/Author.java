@@ -3,6 +3,7 @@ package com.nju.oasis.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author: lxc
@@ -24,4 +25,8 @@ public class Author {
     private String authorKeywords;
     private String ieeeId;
 
+    /*
+    机构id
+     */
+    private int affiliationId;
 }

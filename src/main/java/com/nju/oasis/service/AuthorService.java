@@ -2,7 +2,7 @@ package com.nju.oasis.service;
 
 import com.nju.oasis.controller.VO.AuthorVO;
 import com.nju.oasis.domain.Author;
-import com.nju.oasis.domain.AuthorStatistics;
+import com.nju.oasis.domain.statistics.AuthorStatistics;
 import com.nju.oasis.domain.Document;
 import com.nju.oasis.repository.AuthorRepository;
 import com.nju.oasis.repository.AuthorStatisticsRepository;

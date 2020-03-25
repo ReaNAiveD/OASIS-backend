@@ -2,17 +2,14 @@ package com.nju.oasis.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.nju.oasis.domain.Author;
-import com.nju.oasis.domain.AuthorStatistics;
-import com.nju.oasis.domain.Document;
-import com.nju.oasis.domain.RefArticle;
-import com.nju.oasis.repository.AuthorRepository;
-import com.nju.oasis.repository.AuthorStatisticsRepository;
-import com.nju.oasis.repository.DocumentRepository;
-import com.nju.oasis.repository.RefArticleRepository;
+import com.nju.oasis.domain.*;
+import com.nju.oasis.domain.statistics.AuthorStatistics;
+import com.nju.oasis.repository.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
 import java.util.*;
 
 
@@ -27,44 +24,61 @@ public class DbLoader implements CommandLineRunner {
 
     final static String filepath1 = "D:\\SoftwareProjects\\PycharmProjects\\MachineLearning\\oasis-spider\\ase_res.json";
     final static String filepath2 = "D:\\SoftwareProjects\\PycharmProjects\\MachineLearning\\oasis-spider\\icse_res.json";
+    final static String acemap_field_path = "src/main/resources/sourcedata/FieldAcemap.csv";
 
     AuthorRepository authorRepository;
     DocumentRepository documentRepository;
     RefArticleRepository refArticleRepository;
     AuthorStatisticsRepository authorStatisticsRepository;
-
+    FieldRepository fieldRepository;
+    AffiliationRepository affiliationRepository;
 
     @Autowired
     public DbLoader(AuthorRepository authorRepository,
                     DocumentRepository documentRepository,
                     RefArticleRepository refArticleRepository,
-                    AuthorStatisticsRepository authorStatisticsRepository) {
+                    AuthorStatisticsRepository authorStatisticsRepository,
+                    FieldRepository fieldRepository,
+                    AffiliationRepository affiliationRepository) {
         this.authorRepository = authorRepository;
         this.documentRepository = documentRepository;
         this.refArticleRepository = refArticleRepository;
         this.authorStatisticsRepository = authorStatisticsRepository;
+        this.fieldRepository = fieldRepository;
+        this.affiliationRepository = affiliationRepository;
     }
 
 
     @Override
     public void run(String... args) throws Exception {
+        //加载领域信息
+//        new Thread(this::loadField).start();
         //加载数据库
 //        new Thread(this::loadData_1).start();
+        //更新document表
+//        new Thread(this::updateDocument).start();
+        //更新author表和载入affiliation表
+//        new Thread(this::updateAuthor).start();
         //加载作者统计信息
 //        new Thread(this::loadAuthorStatistics).start();
 
     }
 
+    /*
+    该方法用于加载论文，作者，机构，引用文章
+     */
     private void loadData_1() {
 
         int count = 0;
 
 
 //        清除表格
+        System.out.println("deleting table......");
         authorRepository.deleteAll();
         documentRepository.deleteAll();
         documentRepository.deleteTableDocumentAuthor();
         refArticleRepository.deleteAll();
+        System.out.println("delete completed.");
 
         JSONArray documentJsonArray = ReadUtil.readJsonFile(filepath1);
         documentJsonArray.addAll(ReadUtil.readJsonFile(filepath2));
@@ -77,7 +91,7 @@ public class DbLoader implements CommandLineRunner {
 //            if(count<501){
 //                continue;
 //            }
-            System.out.println(count + ": document processed.");
+            System.out.println(count+":已经处理了"+count/1400.0+"%的文章了，共1200");
             try {
                 processDocument(documentObject);
             } catch (Exception e) {
@@ -95,7 +109,14 @@ public class DbLoader implements CommandLineRunner {
              */
         Document document = JSONObject.toJavaObject(documentJson, Document.class);//反射机制绑定属性
         document.setDocuAbstract(documentJson.getString("abstract"));
+        document.setTotalCitations(document.getTotalDownload()/50);
+        //获取所有的分类信息
+        List<Field> fieldList = fieldRepository.findAll();
+        //为文章设置分类
+        setFieldForDocument(fieldList, document);
+
 //            System.out.println(document.toString());
+
         Document savedDocument = documentRepository.save(document);
         //记录生成的id
         int documentId = savedDocument.getId();
@@ -119,6 +140,23 @@ public class DbLoader implements CommandLineRunner {
                 Author author = JSONObject.toJavaObject(authorJson, Author.class);
                 //将文章的作者关键字加给作者
                 author.setAuthorKeywords(document.getAuthorKeywords());
+
+                /*
+                更新机构信息,并填充作者机构id
+                 */
+                if(!StringUtils.isEmpty(author.getAffiliation())){
+                    Optional<Affiliation> affiliationOptional = affiliationRepository.findByName(author.getAffiliation());
+                    if(affiliationOptional.isPresent()){
+                        author.setAffiliationId(affiliationOptional.get().getId());
+                    }
+                    else{
+                        //创建新的机构并填充id
+                        Affiliation affiliation = new Affiliation();
+                        affiliation.setName(author.getAffiliation());
+                        int createdId = affiliationRepository.save(affiliation).getId();
+                        author.setAffiliationId(createdId);
+                    }
+                }
 
                 //插入author数据，如果有，那就更新
                 Optional<Author> authorOptional = authorRepository.findAuthorByName(author.getName());
@@ -158,6 +196,77 @@ public class DbLoader implements CommandLineRunner {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /*
+    更新文章信息
+     */
+    private void updateDocument(){
+        System.out.println("正在取出所有论文...");
+        List<Document> documentList = documentRepository.findAll();
+        //获取所有的分类信息
+        List<Field> fieldList = fieldRepository.findAll();
+        System.out.println("开始处理论文");
+        int count = 0;
+        for(Document document:documentList){
+            count++;
+            System.out.println(count+":已经处理了"+count/1400.0+"%的文章了，共1200");
+            document.setTotalCitations(document.getTotalDownload()/50);
+            setFieldForDocument(fieldList, document);
+            documentRepository.save(document);
+        }
+    }
+
+    private void updateAuthor(){
+        System.out.println("正在加载author表...");
+        List<Author> authorList = authorRepository.findAll();
+        int count = 0;
+        for(Author author:authorList){
+            /*
+                更新机构信息,并填充作者机构id
+                 */
+            System.out.println(++count+": 共" +authorList.size());
+            if(!StringUtils.isEmpty(author.getAffiliation())){
+                Optional<Affiliation> affiliationOptional = affiliationRepository.findByName(author.getAffiliation());
+                if(affiliationOptional.isPresent()){
+                    author.setAffiliationId(affiliationOptional.get().getId());
+                }
+                else{
+                    //创建新的机构并填充id
+                    Affiliation affiliation = new Affiliation();
+                    affiliation.setName(author.getAffiliation());
+                    int createdId = affiliationRepository.save(affiliation).getId();
+                    author.setAffiliationId(createdId);
+                }
+            }
+            authorRepository.save(author);
+        }
+    }
+
+    private void setFieldForDocument(List<Field> fieldList, Document document){
+        //去除括号
+        String target = document.getKeywords().replaceAll("\\(","")
+                .replaceAll("\\)","");
+        //分割出单词
+        List<String> documentKeywords = Arrays.asList(target.split(",|\\s+"));
+        Boolean flag = false;
+        for(Field field:fieldList){
+            for(String core:field.getKeywords().split(",")){
+                if(documentKeywords.contains(core)){
+                    flag = true;
+                    document.setFieldId(field.getId());
+                    break;
+                }
+            }
+            if(flag){
+                break;
+            }
+        }
+        if (flag==false){
+            //无法分辨出是哪个类的，随机指派
+            int i = (int)(Math.random()*fieldList.size());
+            document.setFieldId(fieldList.get(i).getId());
         }
     }
 
@@ -215,5 +324,29 @@ public class DbLoader implements CommandLineRunner {
         }
         System.out.println(domains);
         return domains;
+    }
+
+
+    /*
+    加载
+     */
+    private void loadField(){
+        /*
+        删除表格
+         */
+        fieldRepository.deleteAll();
+
+        List<List<String>> fieldList = ReadUtil.readCSV(acemap_field_path);
+        int count = 0;
+        for(List<String> fieldLine:fieldList){
+            Field field = new Field();
+            field.setId(++count);
+            field.setField(fieldLine.get(0));//设置领域名字
+            String keywords = fieldLine.get(1).toLowerCase().replaceAll(" ", ",");
+            field.setKeywords(keywords);
+            System.out.println("Create field: " + field.toString());
+            //数据库操作：插入领域
+            fieldRepository.save(field);
+        }
     }
 }

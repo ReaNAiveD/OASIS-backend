@@ -1,15 +1,12 @@
 package com.nju.oasis;
 
-import com.alibaba.fastjson.JSONObject;
-import com.nju.oasis.controller.form.SearchForm;
 import com.nju.oasis.domain.Author;
-import com.nju.oasis.domain.AuthorStatistics;
+import com.nju.oasis.domain.statistics.AuthorStatistics;
 import com.nju.oasis.repository.AuthorRepository;
 import com.nju.oasis.repository.AuthorStatisticsRepository;
 import com.nju.oasis.repository.DocumentRepository;
 import com.nju.oasis.service.AuthorService;
 import com.nju.oasis.service.DocumentService;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 

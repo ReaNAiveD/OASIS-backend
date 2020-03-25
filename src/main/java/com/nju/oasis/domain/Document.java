@@ -32,4 +32,13 @@ public class Document {
     private String publisher;
     private String documentIdentifier;
     private int totalDownload;
+
+    /*
+    领域id
+     */
+    private int fieldId;
+    /*
+    总引用量
+     */
+    private int totalCitations;
 }
