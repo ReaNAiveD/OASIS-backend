@@ -5,6 +5,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author: lxc
@@ -31,5 +34,23 @@ public class ReadUtil {
         }
         JSONArray list = JSON.parseArray(jsonStr);
         return list;
+    }
+
+    public static List<List<String>> readCSV(String path){
+        List<List<String>> resultArray = new ArrayList<>();
+        try{
+            File f = new File(path);
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            String line;
+            String columnName = br.readLine();
+            System.out.println("Read table: " +columnName);
+            while((line=br.readLine())!=null){
+                List<String> lineList = Arrays.asList(line.split(","));
+                resultArray.add(lineList);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return resultArray;
     }
 }

@@ -1,6 +1,6 @@
 package com.nju.oasis.repository;
 
-import com.nju.oasis.domain.AuthorStatistics;
+import com.nju.oasis.domain.statistics.AuthorStatistics;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

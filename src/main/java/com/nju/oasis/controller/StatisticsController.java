@@ -1,7 +1,7 @@
 package com.nju.oasis.controller;
 
 import com.nju.oasis.controller.VO.DocumentVO;
-import com.nju.oasis.domain.AuthorStatistics;
+import com.nju.oasis.domain.statistics.AuthorStatistics;
 import com.nju.oasis.service.AuthorService;
 import com.nju.oasis.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
