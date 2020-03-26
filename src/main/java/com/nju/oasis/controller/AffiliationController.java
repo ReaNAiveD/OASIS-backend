@@ -20,4 +20,14 @@ public class AffiliationController {
         return affiliationService.getBasicInfo(id);
     }
 
+    @GetMapping("/field/stat")
+    public ResultVO getDocumentCountByField(@RequestParam("id")int id) {
+        return affiliationService.getDocumentCountByField(id);
+    }
+
+    @GetMapping("/author/stat")
+    public ResultVO getDocumentCountByAuthor(@RequestParam("id")int id) {
+        return affiliationService.getDocumentCountByAuthor(id);
+    }
+
 }

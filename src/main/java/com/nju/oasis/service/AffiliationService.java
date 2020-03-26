@@ -7,4 +7,8 @@ public interface AffiliationService {
 
     public ResultVO getBasicInfo(int id);
 
+    public ResultVO getDocumentCountByField(int id);
+
+    public ResultVO getDocumentCountByAuthor(int id);
+
 }
