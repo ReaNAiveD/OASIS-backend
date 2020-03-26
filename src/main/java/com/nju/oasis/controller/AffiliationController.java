@@ -30,4 +30,9 @@ public class AffiliationController {
         return affiliationService.getDocumentCountByAuthor(id);
     }
 
+    @GetMapping("/author/activation")
+    public ResultVO getAuthorActivation(@RequestParam("id")int id){
+        return affiliationService.getAuthorActivation(id);
+    }
+
 }

@@ -38,6 +38,12 @@ public class AffiliationServiceImpl implements AffiliationService {
     }
 
     @Override
+    public ResultVO getAuthorActivation(int id) {
+        List<Map<String, String>> result = affiliationRepository.authorActivationStatistic(id);
+        return ResultVO.SUCCESS(result);
+    }
+
+    @Override
     public ResultVO getDocumentCountByAuthor(int id) {
         List<Map<String, String>> result = affiliationRepository.authorStatistic(id);
         return ResultVO.SUCCESS(result);

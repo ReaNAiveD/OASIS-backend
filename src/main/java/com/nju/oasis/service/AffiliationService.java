@@ -11,4 +11,6 @@ public interface AffiliationService {
 
     public ResultVO getDocumentCountByAuthor(int id);
 
+    public ResultVO getAuthorActivation(int id);
+
 }

@@ -40,4 +40,9 @@ public interface AffiliationRepository extends JpaRepository<Affiliation, Intege
     @Query(value = "select a.name, a.id, count(document_id) as docCount from document_author left join author a on document_author.author_id = a.id " +
             "where author_id in (select author.id from author where author.affiliation_id=?) group by a.id order by docCount desc", nativeQuery = true)
     List<Map<String, String>> authorStatistic(int id);
+
+    @Query(value = "select a.name, a.id, count(document_id) as docCount, sum(docAct.docActivation) as activation from document_author left join author a on document_author.author_id = a.id " +
+            "left join (select id, (document.total_citations+5)/(2025-document.publication_year) as docActivation from document) docAct on document_id=docAct.id " +
+            "where author_id in (select author.id from author where author.affiliation_id=?) group by a.id order by activation desc", nativeQuery = true)
+    List<Map<String, String>> authorActivationStatistic(int id);
 }
