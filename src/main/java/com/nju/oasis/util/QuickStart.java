@@ -1,6 +1,5 @@
 package com.nju.oasis.util;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 import java.util.List;
 
