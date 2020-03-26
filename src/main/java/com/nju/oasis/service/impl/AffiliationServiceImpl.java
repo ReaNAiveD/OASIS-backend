@@ -6,7 +6,9 @@ import com.nju.oasis.domain.Affiliation;
 import com.nju.oasis.repository.AffiliationRepository;
 import com.nju.oasis.service.AffiliationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AffiliationServiceImpl implements AffiliationService {
 
     @Autowired
