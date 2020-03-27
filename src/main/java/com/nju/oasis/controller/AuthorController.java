@@ -1,6 +1,7 @@
 package com.nju.oasis.controller;
 
 import com.nju.oasis.controller.VO.AuthorVO;
+import com.nju.oasis.controller.VO.ResultVO;
 import com.nju.oasis.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,18 @@ public class AuthorController {
     @ResponseBody
     public AuthorVO getAuthorDetail(@RequestParam("id") int id){
         return authorService.getAuthorDetail(id);
+    }
+
+    @GetMapping("/conference/summary")
+    @ResponseBody
+    public ResultVO getAuthorConferenceSummary(@RequestParam("id") int id){
+        return authorService.getAuthorDocumentCountByConference(id);
+    }
+
+    @GetMapping("/conference/summary/detail")
+    @ResponseBody
+    public ResultVO getAuthorDetailConferenceSummary(@RequestParam("id") int id){
+        return authorService.getAuthorDocumentCountByDetailConference(id);
     }
 
 }

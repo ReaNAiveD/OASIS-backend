@@ -1,6 +1,7 @@
 package com.nju.oasis.service;
 
 import com.nju.oasis.controller.VO.AuthorVO;
+import com.nju.oasis.controller.VO.ResultVO;
 import com.nju.oasis.domain.Author;
 import com.nju.oasis.domain.statistics.AuthorStatistics;
 import com.nju.oasis.domain.Document;
@@ -70,5 +71,13 @@ public class AuthorService {
         Page<AuthorStatistics> firstPage = authorStatisticsRepository.findAll(pageable);
         List<AuthorStatistics> authorList = firstPage.toList();
         return authorList;
+    }
+
+    public ResultVO getAuthorDocumentCountByConference(int id){
+        return ResultVO.SUCCESS(documentRepository.summaryGroupByConferenceByAuthor(id));
+    }
+
+    public ResultVO getAuthorDocumentCountByDetailConference(int id){
+        return ResultVO.SUCCESS(documentRepository.detailSummaryGroupByConferenceByAuthor(id));
     }
 }

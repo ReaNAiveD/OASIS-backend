@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: lxc
@@ -96,4 +97,14 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
      */
     @Query("select id from Document where id in ?1 and publicationTitle like %?2")
     List<Integer> filterIdsByConference(List<Integer> targetList, String conference);
+
+    @Query(value = "select substring_index(substring_index(publication_title, ')', 1), '(', -1) as conference, count(*) as docCount from " +
+            "(select document_id from document_author where author_id=?) docs left join document on document_id=document.id " +
+            "group by substring_index(substring_index(publication_title, ')', 1), '(', -1) order by docCount;", nativeQuery = true)
+    List<Map<String, String>> summaryGroupByConferenceByAuthor(int authorId);
+
+    @Query(value = "select publication_title as conference, count(*) as docCount from " +
+            "(select document_id from document_author where author_id=?) docs left join document on document_id=document.id " +
+            "group by publication_title order by docCount;", nativeQuery = true)
+    List<Map<String, String>> detailSummaryGroupByConferenceByAuthor(int authorId);
 }
