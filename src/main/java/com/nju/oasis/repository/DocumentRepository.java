@@ -107,4 +107,9 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
             "(select document_id from document_author where author_id=?) docs left join document on document_id=document.id " +
             "group by publication_title order by docCount;", nativeQuery = true)
     List<Map<String, String>> detailSummaryGroupByConferenceByAuthor(int authorId);
+
+
+    @Query(value = "select id, title, field_id, total_citations, (document.total_citations+5)/(2025-document.publication_year) as docActivation from document where id in " +
+            "(select document_id from document_author where author_id = ?);", nativeQuery = true)
+    List<Map<String, String>> findDocWithFieldByAuthor(int authorId);
 }

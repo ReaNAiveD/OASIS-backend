@@ -8,6 +8,7 @@ import com.nju.oasis.domain.Document;
 import com.nju.oasis.repository.AuthorRepository;
 import com.nju.oasis.repository.AuthorStatisticsRepository;
 import com.nju.oasis.repository.DocumentRepository;
+import com.nju.oasis.repository.FieldRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,7 +18,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: lxc
@@ -33,6 +36,8 @@ public class AuthorService {
     DocumentRepository documentRepository;
     @Autowired
     AuthorStatisticsRepository authorStatisticsRepository;
+    @Autowired
+    FieldRepository fieldRepository;
 
     public AuthorVO getAuthorDetail(int id){
         //获取基本信息
@@ -79,5 +84,14 @@ public class AuthorService {
 
     public ResultVO getAuthorDocumentCountByDetailConference(int id){
         return ResultVO.SUCCESS(documentRepository.detailSummaryGroupByConferenceByAuthor(id));
+    }
+
+    public ResultVO getFieldDocumentAndActivation(int id){
+        List<Map<String, String>> fieldActivationCount = fieldRepository.findFieldAndActivationByAuthor(id);
+        List<Map<String, String>> document = documentRepository.findDocWithFieldByAuthor(id);
+        Map<String, Object> result = new HashMap<>();
+        result.put("fields", fieldActivationCount);
+        result.put("documents", document);
+        return ResultVO.SUCCESS(result);
     }
 }

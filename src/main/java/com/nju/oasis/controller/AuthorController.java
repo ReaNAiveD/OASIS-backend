@@ -38,4 +38,10 @@ public class AuthorController {
         return authorService.getAuthorDocumentCountByDetailConference(id);
     }
 
+    @GetMapping("/field/summary")
+    @ResponseBody
+    public ResultVO getFieldDocumentCount(@RequestParam("id")int id){
+        return authorService.getFieldDocumentAndActivation(id);
+    }
+
 }
