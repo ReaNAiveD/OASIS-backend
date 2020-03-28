@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -39,5 +40,9 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
     @Query(value = "select id, name, first_name, last_name, author_affiliation, author_keywords, ieee_id, affiliation_id from author where author.id in (select author_id from document_author where document_id=?1)", nativeQuery = true)
     List<Author> getAuthorsByDocumentId(int documentId);
+
+    @Query(value = "select author_id, name, sum((d.total_citations+5)/(2025-d.publication_year)) as activation from document_author left join document d on document_author.document_id = d.id left join author a on document_author.author_id = a.id " +
+            "where d.field_id=? group by author_id, name order by activation desc", nativeQuery = true)
+    List<Map<String, String>> getAuthorActivationByField(int fieldId);
 
 }

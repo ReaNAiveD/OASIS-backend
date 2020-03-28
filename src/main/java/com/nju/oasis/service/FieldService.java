@@ -6,4 +6,8 @@ public interface FieldService {
 
     ResultVO getFieldDocByYear(int id);
 
+    ResultVO getFieldAuthorActivation(int id);
+
+    ResultVO getFieldAffiliationActivation(int id);
+
 }

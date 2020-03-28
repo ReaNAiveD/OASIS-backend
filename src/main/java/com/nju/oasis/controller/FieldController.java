@@ -5,6 +5,7 @@ import com.nju.oasis.service.FieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,8 +20,18 @@ public class FieldController {
     }
 
     @GetMapping("/publication/year")
-    public ResultVO getFieldPublicationByYear(int id){
+    public ResultVO getFieldPublicationByYear(@RequestParam("id") int id){
         return fieldService.getFieldDocByYear(id);
+    }
+
+    @GetMapping("/author/activation")
+    public ResultVO getAuthorActivationByField(@RequestParam("id") int id){
+        return fieldService.getFieldAuthorActivation(id);
+    }
+
+    @GetMapping("/aff/activation")
+    public ResultVO getAffiliationActivationByField(@RequestParam("id") int id){
+        return fieldService.getFieldAffiliationActivation(id);
     }
 
 }
