@@ -112,4 +112,7 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
     @Query(value = "select id, title, field_id, total_citations, (document.total_citations+5)/(2025-document.publication_year) as docActivation from document where id in " +
             "(select document_id from document_author where author_id = ?);", nativeQuery = true)
     List<Map<String, String>> findDocWithFieldByAuthor(int authorId);
+
+    @Query(value = "select publication_year as year, count(id) from document where field_id=? group by year order by year;", nativeQuery = true)
+    List<Map<String, String>> findDocCountYearSummaryByField(int fieldId);
 }
