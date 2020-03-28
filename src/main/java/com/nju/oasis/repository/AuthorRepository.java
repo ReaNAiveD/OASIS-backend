@@ -45,4 +45,6 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
             "where d.field_id=? group by author_id, name order by activation desc", nativeQuery = true)
     List<Map<String, String>> getAuthorActivationByField(int fieldId);
 
+    List<Author> findAllByAffiliationId(int affiliationId);
+
 }

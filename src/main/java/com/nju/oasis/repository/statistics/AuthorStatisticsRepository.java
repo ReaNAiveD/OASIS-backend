@@ -1,4 +1,4 @@
-package com.nju.oasis.repository;
+package com.nju.oasis.repository.statistics;
 
 import com.nju.oasis.domain.statistics.AuthorStatistics;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.nju.oasis.domain.*;
 import com.nju.oasis.domain.statistics.AuthorStatistics;
 import com.nju.oasis.repository.*;
+import com.nju.oasis.repository.statistics.AuthorStatisticsRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

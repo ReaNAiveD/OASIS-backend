@@ -6,7 +6,7 @@ import com.nju.oasis.domain.Author;
 import com.nju.oasis.domain.statistics.AuthorStatistics;
 import com.nju.oasis.domain.Document;
 import com.nju.oasis.repository.AuthorRepository;
-import com.nju.oasis.repository.AuthorStatisticsRepository;
+import com.nju.oasis.repository.statistics.AuthorStatisticsRepository;
 import com.nju.oasis.repository.DocumentRepository;
 import com.nju.oasis.repository.FieldRepository;
 import org.springframework.beans.BeanUtils;
@@ -17,10 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: lxc
@@ -52,6 +49,12 @@ public class AuthorService {
         authorVO.setDocumentCount(documentList.size());
         authorVO.setDocuments(documentList);
         authorVO.setCoworkers(authorList);
+
+        List<Map<String, String>> fieldActivationCount = fieldRepository.findFieldAndActivationByAuthor(id);
+        //按照活跃度降序
+        Collections.reverse(fieldActivationCount);
+        authorVO.setFieldList(fieldActivationCount);
+
         return authorVO;
     }
 

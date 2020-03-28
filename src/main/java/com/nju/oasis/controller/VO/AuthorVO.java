@@ -2,9 +2,11 @@ package com.nju.oasis.controller.VO;
 
 import com.nju.oasis.domain.Author;
 import com.nju.oasis.domain.Document;
+import com.nju.oasis.domain.Field;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: lxc
@@ -33,5 +35,12 @@ public class AuthorVO {
     private int documentCount;
     //所写的论文
     private List<Document> documents;
+    /*
+    阶段二新增
+     */
+    //机构Id
+    private int affiliationId;
+    //作者的领域专业，会按照活跃度降序
+    private List<Map<String ,String>> fieldList;
 
 }

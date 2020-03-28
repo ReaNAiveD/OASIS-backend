@@ -3,7 +3,7 @@ package com.nju.oasis;
 import com.nju.oasis.domain.Author;
 import com.nju.oasis.domain.statistics.AuthorStatistics;
 import com.nju.oasis.repository.AuthorRepository;
-import com.nju.oasis.repository.AuthorStatisticsRepository;
+import com.nju.oasis.repository.statistics.AuthorStatisticsRepository;
 import com.nju.oasis.repository.DocumentRepository;
 import com.nju.oasis.repository.FieldRepository;
 import com.nju.oasis.service.AuthorService;

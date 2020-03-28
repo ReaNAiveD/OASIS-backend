@@ -41,4 +41,10 @@ public class Document {
     总引用量
      */
     private int totalCitations;
+
+    public double getActivation(){
+        //(document.total_citations+5)/(2025-document.publication_year)
+        double activation = ((double)(this.totalCitations+5))/(2025-this.publicationYear);
+        return activation;
+    }
 }

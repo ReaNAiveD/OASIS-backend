@@ -1,7 +1,10 @@
 package com.nju.oasis.service;
 
 import com.nju.oasis.controller.VO.ResultVO;
+import com.nju.oasis.domain.statistics.AffiliationStatistics;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 public interface AffiliationService {
 
@@ -12,5 +15,7 @@ public interface AffiliationService {
     public ResultVO getDocumentCountByAuthor(int id);
 
     public ResultVO getAuthorActivation(int id);
+
+    List<AffiliationStatistics> getAffiliationsWithMaxActivation(int num);
 
 }

@@ -17,8 +17,15 @@ public class ResultVO {
     public static int GENERAL_FAILED = 1;
     public static int AFFILIATION_NOT_EXIST = 34;
 
+    /*
+    0代表成功，1代表失败
+     */
     int result;
+    //内容
     Object data;
+    /*
+    返回的信息
+     */
     String message;
 
     public static ResultVO SUCCESS(Object data){

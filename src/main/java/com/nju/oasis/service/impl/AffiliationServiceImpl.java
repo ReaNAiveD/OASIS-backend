@@ -3,9 +3,15 @@ package com.nju.oasis.service.impl;
 import com.nju.oasis.controller.VO.AffiliationInfoVO;
 import com.nju.oasis.controller.VO.ResultVO;
 import com.nju.oasis.domain.Affiliation;
+import com.nju.oasis.domain.statistics.AffiliationStatistics;
 import com.nju.oasis.repository.AffiliationRepository;
+import com.nju.oasis.repository.statistics.AffiliationStatisticsRepository;
 import com.nju.oasis.service.AffiliationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +22,8 @@ public class AffiliationServiceImpl implements AffiliationService {
 
     @Autowired
     AffiliationRepository affiliationRepository;
+    @Autowired
+    AffiliationStatisticsRepository affiliationStatisticsRepository;
 
     @Override
     public ResultVO getBasicInfo(int id) {
@@ -47,5 +55,12 @@ public class AffiliationServiceImpl implements AffiliationService {
     public ResultVO getDocumentCountByAuthor(int id) {
         List<Map<String, String>> result = affiliationRepository.authorStatistic(id);
         return ResultVO.SUCCESS(result);
+    }
+
+    @Override
+    public List<AffiliationStatistics> getAffiliationsWithMaxActivation(int num) {
+        Pageable pageable = PageRequest.of(0, num, Sort.Direction.DESC, "activation");
+        Page<AffiliationStatistics> firstPage = affiliationStatisticsRepository.findAll(pageable);
+        return firstPage.getContent();
     }
 }

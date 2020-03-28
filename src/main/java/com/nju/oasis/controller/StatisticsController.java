@@ -1,7 +1,9 @@
 package com.nju.oasis.controller;
 
 import com.nju.oasis.controller.VO.DocumentVO;
+import com.nju.oasis.domain.statistics.AffiliationStatistics;
 import com.nju.oasis.domain.statistics.AuthorStatistics;
+import com.nju.oasis.service.AffiliationService;
 import com.nju.oasis.service.AuthorService;
 import com.nju.oasis.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class StatisticsController {
     AuthorService authorService;
     @Autowired
     DocumentService documentService;
+    @Autowired
+    AffiliationService affiliationService;
 
     @GetMapping("/top/author")
     @ResponseBody
@@ -35,6 +39,12 @@ public class StatisticsController {
     @ResponseBody
     public List<DocumentVO> getDocumentsWithMaxDownloads(@RequestParam(value = "num", defaultValue = "5") int num){
         return documentService.getDocumentsWithMaxDownloads(num);
+    }
+
+    @GetMapping("/top/affiliation")
+    @ResponseBody
+    public List<AffiliationStatistics> getAffiliationsWithMaxActivation(@RequestParam(value = "num", defaultValue = "5")int num){
+        return affiliationService.getAffiliationsWithMaxActivation(num);
     }
 
 }
