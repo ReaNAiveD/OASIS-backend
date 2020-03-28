@@ -82,6 +82,12 @@ class OasisApplicationTests {
     }
 
     @Test
+    void testDocument_6(){
+
+        System.out.println(documentRepository.getAllByAffiliationId(12, 0, 5));
+    }
+
+    @Test
     void testAuthor_1(){
         Author author = authorRepository.findById(10450);
         System.out.println(author);
