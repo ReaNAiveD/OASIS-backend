@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author: lxc
@@ -43,6 +41,27 @@ public class SearchController {
             searchForm.setConference("all");
         }
 
+        return searchService.searchDocument(searchForm);
+    }
+
+    @GetMapping("/document/fetch")
+    @ResponseBody
+    public Page<DocumentVO> search2(@RequestParam("keywords") String combined){
+
+        SearchForm searchForm = new SearchForm();
+        searchForm.setCombined(combined);
+
+        //默认页大小
+        if(searchForm.getPageSize()==0){
+            searchForm.setPageSize(20);
+        }
+        if(StringUtils.isEmpty(searchForm.getOrderBy())){
+            searchForm.setOrderBy("default");
+        }
+
+        if(StringUtils.isEmpty(searchForm.getConference())){
+            searchForm.setConference("all");
+        }
         return searchService.searchDocument(searchForm);
     }
 }

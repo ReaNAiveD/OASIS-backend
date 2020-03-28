@@ -95,6 +95,7 @@ class OasisApplicationTests {
 
     @Test
     void testAuthor_2(){
+        System.out.println(authorRepository.getCoworkersById(10452));
     }
 
     @Test

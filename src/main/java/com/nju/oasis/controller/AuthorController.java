@@ -2,7 +2,9 @@ package com.nju.oasis.controller;
 
 import com.nju.oasis.controller.VO.AuthorVO;
 import com.nju.oasis.controller.VO.ResultVO;
+import com.nju.oasis.model.map.MyMap;
 import com.nju.oasis.service.AuthorService;
+import com.nju.oasis.service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,8 @@ public class AuthorController {
 
     @Autowired
     AuthorService authorService;
+    @Autowired
+    MapService mapService;
 
     @GetMapping("/detail")
     @ResponseBody
@@ -42,6 +46,12 @@ public class AuthorController {
     @ResponseBody
     public ResultVO getFieldDocumentCount(@RequestParam("id")int id){
         return authorService.getFieldDocumentAndActivation(id);
+    }
+
+    @GetMapping("/coworkers/map")
+    @ResponseBody
+    public MyMap getCoworkerRelationship(@RequestParam("id")int id){
+        return mapService.coworkerRelationship(id);
     }
 
 }

@@ -47,4 +47,22 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
     List<Author> findAllByAffiliationId(int affiliationId);
 
+    /*
+    获得某作者的合作者id
+     */
+    @Query(value = "select distinct da1.author_id from document_author da1 where da1.author_id<>?1 and da1.document_id in "+
+            "(select da2.document_id from document_author da2 where da2.author_id=?1)", nativeQuery = true)
+    List<Integer> getCoworkersById(int id);
+    /*
+    计算作者活跃度
+     */
+    @Query(value = "select sum((d.total_citations+5)/(2025-d.publication_year)) from document_author left join document d on document_author.document_id = d.id and document_author.author_id=?1", nativeQuery = true)
+    double getActivationById(int id);
+    /*
+    两个作者共同的作品数量
+     */
+    @Query(value = "select count(*) from document_author da1 where da1.author_id=?1 and da1.document_id in "+
+            "(select da2.document_id from document_author da2 where da2.author_id=?2)", nativeQuery = true)
+    int getWorksNumBetweenAuthors(int authorId1, int authorId2);
+
 }

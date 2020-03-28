@@ -26,6 +26,6 @@ public class AuthorStatistics {
     private int documentCount;
     //擅长领域
     private String domains;
-    //影响力
-    private double influence;
+    //活跃度
+    private double activation;
 }

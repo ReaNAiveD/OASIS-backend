@@ -62,6 +62,8 @@ public class DbLoader implements CommandLineRunner {
 //        new Thread(this::updateAuthor).start();
         //加载作者统计信息
 //        new Thread(this::loadAuthorStatistics).start();
+        //更新author_statistics
+//        new Thread(this::updateAuthorStatistics).start();
 
     }
 
@@ -292,8 +294,21 @@ public class DbLoader implements CommandLineRunner {
             //计算作者专业领域
             String domains = getDomains(author.getAuthorKeywords());
             authorStatistics.setDomains(domains);
+            authorStatistics.setActivation(authorRepository.getActivationById(author.getId()));
             authorStatisticsRepository.save(authorStatistics);
         }
+    }
+
+    private void updateAuthorStatistics(){
+        System.out.println("reading...");
+        List<AuthorStatistics> authorStatisticsList = authorStatisticsRepository.findAll();
+        int count=0;
+        for(AuthorStatistics authorStatistics:authorStatisticsList){
+            System.out.println(++count+"/"+authorStatisticsList.size());
+            authorStatistics.setActivation(authorRepository.getActivationById(authorStatistics.getAuthorId()));
+            authorStatisticsRepository.save(authorStatistics);
+        }
+        System.out.println("end");
     }
 
     private String getDomains(String authorKeywords){
