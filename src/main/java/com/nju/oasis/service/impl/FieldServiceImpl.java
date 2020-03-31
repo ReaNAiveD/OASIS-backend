@@ -79,4 +79,9 @@ public class FieldServiceImpl implements FieldService {
         }
         return resultList;
     }
+
+    @Override
+    public List<FieldRepository.HotFieldItem> getHotFields() {
+        return fieldRepository.findHotField();
+    }
 }

@@ -3,6 +3,7 @@ package com.nju.oasis.service;
 import com.nju.oasis.controller.VO.DocumentVO;
 import com.nju.oasis.controller.VO.ResultVO;
 import com.nju.oasis.domain.Field;
+import com.nju.oasis.repository.FieldRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,5 +22,7 @@ public interface FieldService {
     根据领域id获取文章
      */
     List<DocumentVO> getDocumentsOfField(int fieldId, int page, int pageSize);
+
+    List<FieldRepository.HotFieldItem> getHotFields();
 
 }

@@ -21,4 +21,15 @@ public interface FieldRepository extends JpaRepository<Field, Integer> {
             "left join field on docAct.field_id=field.id group by field_id order by activation", nativeQuery = true)
     List<Map<String, String>> findFieldAndActivationByAuthor(int authorId);
 
+    @Query(value = "select field, field_id as fieldId, sum((document.total_citations+5)/(2025-document.publication_year)) as fieldActivation, count(document.id) as docCount from document " +
+            "left join field f on document.field_id = f.id group by field, field_id order by fieldActivation desc ", nativeQuery = true)
+    List<HotFieldItem> findHotField();
+
+    interface HotFieldItem{
+        String getField();
+        Long getFieldId();
+        Double getFieldActivation();
+        Integer getDocCount();
+    }
+
 }
