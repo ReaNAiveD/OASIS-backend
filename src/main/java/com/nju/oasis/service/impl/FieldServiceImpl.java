@@ -81,4 +81,9 @@ public class FieldServiceImpl implements FieldService {
         documentVO.setAuthors(authorList);
         return documentVO;
     }
+
+    @Override
+    public List<FieldRepository.HotFieldItem> getHotFields() {
+        return fieldRepository.findHotField();
+    }
 }

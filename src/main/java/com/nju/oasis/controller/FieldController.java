@@ -56,4 +56,9 @@ public class FieldController {
         return fieldService.getDocumentsOfField(fieldId, page, pageSize);
     }
 
+    @GetMapping("/hot")
+    public ResultVO getHotFields(){
+        return ResultVO.SUCCESS(fieldService.getHotFields());
+    }
+
 }
