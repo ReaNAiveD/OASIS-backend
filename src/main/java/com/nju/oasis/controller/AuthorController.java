@@ -54,4 +54,16 @@ public class AuthorController {
         return mapService.coworkerRelationship(id);
     }
 
+    @GetMapping("/coworkers")
+    @ResponseBody
+    public ResultVO getCoworkerLinks(@RequestParam("id")int id){
+        return ResultVO.SUCCESS(authorService.getAuthorCoworkerLink(id));
+    }
+
+    @GetMapping("/coworkers/complex")
+    @ResponseBody
+    public ResultVO getComplexCoworkerLinks(@RequestParam("id")int id){
+        return ResultVO.SUCCESS(authorService.getComplexAuthorCoworkerLink(id));
+    }
+
 }

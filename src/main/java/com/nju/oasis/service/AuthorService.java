@@ -1,6 +1,7 @@
 package com.nju.oasis.service;
 
 import com.nju.oasis.controller.VO.AuthorVO;
+import com.nju.oasis.controller.VO.CoworkerLinkVO;
 import com.nju.oasis.controller.VO.ResultVO;
 import com.nju.oasis.domain.Author;
 import com.nju.oasis.domain.statistics.AuthorStatistics;
@@ -97,4 +98,35 @@ public class AuthorService {
         result.put("documents", document);
         return ResultVO.SUCCESS(result);
     }
+
+    public List<CoworkerLinkVO> getAuthorCoworkerLink(int id){
+        return coworkerLinkTranslate(authorRepository.getCoworkerLinks(id));
+    }
+
+    public List<CoworkerLinkVO> getComplexAuthorCoworkerLink(int id){
+        return coworkerLinkTranslate(authorRepository.getComplexCoworkerLinks(id));
+    }
+
+    private List<CoworkerLinkVO> coworkerLinkTranslate(List<AuthorRepository.CoworkerLinks> coworkerLinks){
+        HashMap<Integer, HashMap<Integer, CoworkerLinkVO>> temp = new HashMap<>();
+        ArrayList<CoworkerLinkVO> result = new ArrayList<>();
+        for (AuthorRepository.CoworkerLinks coworkerLink:
+                coworkerLinks ) {
+            HashMap<Integer, CoworkerLinkVO> tempLinks = temp.computeIfAbsent(coworkerLink.getFromId(), k -> new HashMap<>());
+            if (tempLinks.get(coworkerLink.getToId()) == null) {
+                CoworkerLinkVO.SimpleAuthor from = new CoworkerLinkVO.SimpleAuthor(coworkerLink.getFromId(),
+                        coworkerLink.getFromAuthor(), coworkerLink.getFromAffiliationId(), coworkerLink.getFromAffiliation(), coworkerLink.getFromDocCount(), coworkerLink.getFromActivation());
+                CoworkerLinkVO.SimpleAuthor to = new CoworkerLinkVO.SimpleAuthor(coworkerLink.getToId(),
+                        coworkerLink.getToAuthor(), coworkerLink.getToAffiliationId(), coworkerLink.getToAffiliation(), coworkerLink.getToDocCount(), coworkerLink.getToActivation());
+                CoworkerLinkVO coworkerLinkVO = new CoworkerLinkVO(from, to);
+                result.add(coworkerLinkVO);
+                tempLinks.put(coworkerLink.getToId(), coworkerLinkVO);
+            }
+            CoworkerLinkVO coworkerLinkVO = tempLinks.get(coworkerLink.getToId());
+            CoworkerLinkVO.SimpleDocument doc = new CoworkerLinkVO.SimpleDocument(coworkerLink.getDocId(), coworkerLink.getDoc());
+            coworkerLinkVO.getDocs().add(doc);
+        }
+        return result;
+    }
+
 }

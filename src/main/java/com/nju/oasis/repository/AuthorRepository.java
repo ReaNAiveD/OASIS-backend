@@ -1,7 +1,6 @@
 package com.nju.oasis.repository;
 
 import com.nju.oasis.domain.Author;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -64,5 +63,53 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
     @Query(value = "select count(*) from document_author da1 where da1.author_id=?1 and da1.document_id in "+
             "(select da2.document_id from document_author da2 where da2.author_id=?2)", nativeQuery = true)
     int getWorksNumBetweenAuthors(int authorId1, int authorId2);
+
+    /*
+     * 获取某作者的所有直接合作者以及他们的合作作品
+     * @param authorId 作者Id
+     * @return 合作者及合作作品
+     */
+    @Query(value = "select fromId, froma.name as fromAuthor, froma.affiliation_id as fromAffiliationId, fromaff.name as fromAffiliation, fromas.document_count as fromDocCount, fromas.activation as fromActivation,\n" +
+            "       document_author.author_id as toId, toa.name as toAuthor, toa.affiliation_id as toAffiliationId, toaff.name as toAffiliation, toas.document_count as toDocCount, toas.activation as toActivation, f.document_id as docId, d.title as doc\n" +
+            "from (select author_id as fromId, document_id from document_author where author_id=?) f\n" +
+            "    left join document_author on f.document_id=document_author.document_id\n" +
+            "    left join author toa on document_author.author_id = toa.id left join author froma on f.fromId=froma.id\n" +
+            "    left join document d on document_author.document_id = d.id\n" +
+            "    left join affiliation toaff on toa.affiliation_id = toaff.id\n" +
+            "    left join affiliation fromaff on froma.affiliation_id = fromaff.id\n" +
+            "    left join author_statistics `fromas` on froma.id = `fromas`.author_id\n" +
+            "    left join author_statistics `toas` on toa.id = `toas`.author_id\n" +
+            "where fromId<>document_author.author_id", nativeQuery = true)
+    List<CoworkerLinks> getCoworkerLinks(int authorId);
+
+    @Query(value = "select fromId, froma.name as fromAuthor, froma.affiliation_id as fromAffiliationId, fromaff.name as fromAffiliation, fromas.document_count as fromDocCount, fromas.activation as fromActivation,\n" +
+            "       document_author.author_id as toId, toa.name as toAuthor, toa.affiliation_id as toAffiliationId, toaff.name as toAffiliation, toas.document_count as toDocCount, toas.activation as toActivation, f.document_id as docId, d.title as doc\n" +
+            "from (select author_id as fromId, document_id from document_author where author_id in (select author_id from document_author where document_id in (select document_id from document_author where author_id=?))) f\n" +
+            "    left join document_author on f.document_id=document_author.document_id\n" +
+            "    left join author toa on document_author.author_id = toa.id left join author froma on f.fromId=froma.id\n" +
+            "    left join document d on document_author.document_id = d.id\n" +
+            "    left join affiliation toaff on toa.affiliation_id = toaff.id\n" +
+            "    left join affiliation fromaff on froma.affiliation_id = fromaff.id\n" +
+            "    left join author_statistics `fromas` on froma.id = `fromas`.author_id\n" +
+            "    left join author_statistics `toas` on toa.id = `toas`.author_id\n" +
+            "where fromId<document_author.author_id", nativeQuery = true)
+    List<CoworkerLinks> getComplexCoworkerLinks(int authorId);
+
+    interface CoworkerLinks {
+        int getFromId();
+        String getFromAuthor();
+        int getFromAffiliationId();
+        String getFromAffiliation();
+        int getFromDocCount();
+        double getFromActivation();
+        int getToId();
+        String getToAuthor();
+        int getToAffiliationId();
+        String getToAffiliation();
+        int getToDocCount();
+        double getToActivation();
+        int getDocId();
+        String getDoc();
+    }
 
 }
