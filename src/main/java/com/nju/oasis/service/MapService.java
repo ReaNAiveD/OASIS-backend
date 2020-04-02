@@ -42,6 +42,7 @@ public class MapService {
          */
 
         List<Author> authorList = authorRepository.findAllById(allAuthors);
+        List<AuthorStatistics> authorStatisticsList = authorStatisticsRepository.findAllByAuthorIdIn(allAuthors);
         /*
         制作点
          */
@@ -59,7 +60,7 @@ public class MapService {
             authorOfVertex.setName(author.getName());
             authorOfVertex.setAffiliation(author.getAffiliation());
             authorOfVertex.setAffiliationId(author.getAffiliationId());
-            AuthorStatistics authorStatistics = authorStatisticsRepository.findByAuthorId(author.getId()).get();
+            AuthorStatistics authorStatistics = authorStatisticsList.get(i);
             authorOfVertex.setDocumentCount(authorStatistics.getDocumentCount());
             //计算活跃度
             authorOfVertex.setActivation(authorStatistics.getActivation());
@@ -88,11 +89,18 @@ public class MapService {
         /*
         制作边
          */
+        List<int[]> worksNum = authorRepository.getWorksNumBetweenAuthors(allAuthors);
         List<Edge> edgeList = new ArrayList<>();
         for(int i=0;i<allAuthors.size();i++){
             for(int j=i+1;j<allAuthors.size();j++){
                 //计算共同作品数量
-                int workNum = authorRepository.getWorksNumBetweenAuthors(allAuthors.get(i), allAuthors.get(j));
+                int workNum = 0;
+                for(int[] line: worksNum){
+                    if(line[0]==allAuthors.get(i) && line[1]==allAuthors.get(j)){
+                        workNum = line[2];
+                        break;
+                    }
+                }
                 if(workNum!=0){
                     CoworkerOfEdge coworkerOfEdge = new CoworkerOfEdge();
                     coworkerOfEdge.setCommonWorks(workNum);

@@ -4,6 +4,7 @@ import com.nju.oasis.domain.statistics.AuthorStatistics;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,5 +15,5 @@ import java.util.Optional;
  */
 @Repository
 public interface AuthorStatisticsRepository extends JpaRepository<AuthorStatistics, Integer> {
-    Optional<AuthorStatistics> findByAuthorId(int authorId);
+    List<AuthorStatistics> findAllByAuthorIdIn(List<Integer> authorIdList);
 }

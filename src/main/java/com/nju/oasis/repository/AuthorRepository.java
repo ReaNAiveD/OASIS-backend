@@ -60,9 +60,10 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
     /*
     两个作者共同的作品数量
      */
-    @Query(value = "select count(*) from document_author da1 where da1.author_id=?1 and da1.document_id in "+
-            "(select da2.document_id from document_author da2 where da2.author_id=?2)", nativeQuery = true)
-    int getWorksNumBetweenAuthors(int authorId1, int authorId2);
+    @Query(value = "select da1.author_id as id1, da2.author_id as id2, count(*) as num from document_author da1,document_author da2" +
+            " where da1.document_id=da2.document_id and da1.author_id<da2.author_id and da1.author_id in ?1 and da2.author_id in ?1" +
+            " group by da1.author_id, da2.author_id", nativeQuery = true)
+    List<int[]> getWorksNumBetweenAuthors(List<Integer> authorIds);
 
     /*
      * 获取某作者的所有直接合作者以及他们的合作作品
