@@ -6,6 +6,9 @@ import com.nju.oasis.controller.VO.ResultVO;
 import com.nju.oasis.domain.Author;
 import com.nju.oasis.domain.statistics.AuthorStatistics;
 import com.nju.oasis.domain.Document;
+import com.nju.oasis.model.map.Edge;
+import com.nju.oasis.model.map.MyMap;
+import com.nju.oasis.model.map.Vertex;
 import com.nju.oasis.repository.AuthorRepository;
 import com.nju.oasis.repository.statistics.AuthorStatisticsRepository;
 import com.nju.oasis.repository.DocumentRepository;
@@ -99,12 +102,14 @@ public class AuthorService {
         return ResultVO.SUCCESS(result);
     }
 
-    public List<CoworkerLinkVO> getAuthorCoworkerLink(int id){
-        return coworkerLinkTranslate(authorRepository.getCoworkerLinks(id));
+    public MyMap getAuthorCoworkerLink(int id){
+        List<CoworkerLinkVO> coworkerLinkVOS = coworkerLinkTranslate(authorRepository.getCoworkerLinks(id));
+        return getMapFromCoworkerLinkVOs(coworkerLinkVOS, id);
     }
 
-    public List<CoworkerLinkVO> getComplexAuthorCoworkerLink(int id){
-        return coworkerLinkTranslate(authorRepository.getComplexCoworkerLinks(id));
+    public MyMap getComplexAuthorCoworkerLink(int id){
+        List<CoworkerLinkVO> coworkerLinkVOS = coworkerLinkTranslate(authorRepository.getComplexCoworkerLinks(id));
+        return getMapFromCoworkerLinkVOs(coworkerLinkVOS, id);
     }
 
     private List<CoworkerLinkVO> coworkerLinkTranslate(List<AuthorRepository.CoworkerLinks> coworkerLinks){
@@ -127,6 +132,79 @@ public class AuthorService {
             coworkerLinkVO.getDocs().add(doc);
         }
         return result;
+    }
+
+    /*
+    将List<CoworkerLinkVO>转化成图
+     */
+    private MyMap getMapFromCoworkerLinkVOs(List<CoworkerLinkVO> linkList, int centerId){
+        List<Vertex> vertexList = new ArrayList<>();
+        List<Edge> edgeList = new ArrayList<>();
+
+        List<Integer> affIdList = new ArrayList<>();
+        List<Integer> authorIdList = new ArrayList<>();
+        for(CoworkerLinkVO link:linkList){
+            //判断from
+            CoworkerLinkVO.SimpleAuthor from = link.getFrom();
+            int v1_id;
+            if(!authorIdList.contains(from.getId())){
+                //新的顶点
+                v1_id = authorIdList.size();
+                authorIdList.add(from.getId());
+                Vertex v1 = new Vertex();
+                v1.setId(v1_id);
+                v1.setContent(from);
+                v1.setCore(from.getId()==centerId);
+                //设置机构
+                if(!affIdList.contains(from.getAffiliationId())){
+                    //新的机构
+                    v1.setCategory(affIdList.size());
+                    affIdList.add(from.getAffiliationId());
+                }
+                else {
+                    v1.setCategory(affIdList.indexOf(from.getAffiliationId()));
+                }
+                vertexList.add(v1);
+            }
+            else{
+                v1_id = authorIdList.indexOf(from.getId());
+            }
+
+            //判断to
+            CoworkerLinkVO.SimpleAuthor to = link.getTo();
+            int v2_id;
+            if(!authorIdList.contains(to.getId())){
+                //新的顶点
+                v2_id = authorIdList.size();
+                authorIdList.add(to.getId());
+                Vertex v2 = new Vertex();
+                v2.setId(v2_id);
+                v2.setContent(to);
+                v2.setCore(to.getId()==centerId);
+                //设置机构
+                if(!affIdList.contains(to.getAffiliationId())){
+                    //新的机构
+                    v2.setCategory(affIdList.size());
+                    affIdList.add(to.getAffiliationId());
+                }
+                else {
+                    v2.setCategory(affIdList.indexOf(to.getAffiliationId()));
+                }
+                vertexList.add(v2);
+            }
+            else{
+                v2_id = authorIdList.indexOf(to.getId());
+            }
+
+            Edge edge = new Edge();
+            edge.setV1(v1_id);
+            edge.setV2(v2_id);
+            edge.setContent(link.getDocs());
+            edge.setWeight(link.getDocs().size());
+            edgeList.add(edge);
+        }
+
+        return MyMap.builder().vertices(vertexList).edges(edgeList).build();
     }
 
 }
