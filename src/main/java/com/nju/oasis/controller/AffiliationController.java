@@ -5,6 +5,7 @@ import com.nju.oasis.controller.VO.ResultVO;
 import com.nju.oasis.service.AffiliationService;
 import com.nju.oasis.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,7 +44,7 @@ public class AffiliationController {
     }
 
     @GetMapping("/document")
-    public List<DocumentVO> getDocumentsOfAff(@RequestParam("id") int affId,
+    public Page<DocumentVO> getDocumentsOfAff(@RequestParam("id") int affId,
                                               @RequestParam(name = "page", defaultValue = "0") int page,
                                               @RequestParam(value = "pageSize",defaultValue = "5") int pageSize){
         return affiliationService.getDocumentsOfAff(affId, page, pageSize);

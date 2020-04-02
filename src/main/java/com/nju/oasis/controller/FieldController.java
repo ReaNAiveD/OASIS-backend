@@ -6,6 +6,7 @@ import com.nju.oasis.domain.Document;
 import com.nju.oasis.domain.Field;
 import com.nju.oasis.service.FieldService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class FieldController {
     }
 
     @GetMapping("/document")
-    public List<DocumentVO> getDocumentsOfField(@RequestParam("id") int fieldId,
+    public Page<DocumentVO> getDocumentsOfField(@RequestParam("id") int fieldId,
                                                 @RequestParam(name = "page", defaultValue = "0") int page,
                                                 @RequestParam(value = "pageSize",defaultValue = "5") int pageSize){
         return fieldService.getDocumentsOfField(fieldId, page, pageSize);

@@ -15,10 +15,7 @@ import com.nju.oasis.service.AffiliationService;
 import com.nju.oasis.service.DocumentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -79,7 +76,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     }
 
     @Override
-    public List<DocumentVO> getDocumentsOfAff(int affId, int page, int pageSize) {
+    public Page<DocumentVO> getDocumentsOfAff(int affId, int page, int pageSize) {
         List<Document> documentList = documentRepository.getAllByAffiliationId(affId, page, pageSize);
         List<DocumentVO> resultList = new ArrayList<>();
         for(Document document:documentList){
@@ -89,6 +86,13 @@ public class AffiliationServiceImpl implements AffiliationService {
             documentVO.setAuthors(authorList);
             resultList.add(documentVO);
         }
-        return resultList;
+
+        /*
+        生成分页对象
+         */
+        int totalNum = documentRepository.countAllByAffiliationId(affId);
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<DocumentVO> resultPage = new PageImpl<>(resultList, pageable, totalNum);
+        return resultPage;
     }
 }

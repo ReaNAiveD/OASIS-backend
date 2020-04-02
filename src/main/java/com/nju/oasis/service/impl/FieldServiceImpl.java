@@ -12,6 +12,7 @@ import com.nju.oasis.repository.FieldRepository;
 import com.nju.oasis.service.FieldService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -66,17 +67,18 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public List<DocumentVO> getDocumentsOfField(int fieldId, int page, int pageSize) {
+    public Page<DocumentVO> getDocumentsOfField(int fieldId, int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        List<Document> documentList = documentRepository.getAllByFieldId(fieldId, pageable);
-        List<DocumentVO> resultList = new ArrayList<>();
-        for(Document document:documentList){
-            DocumentVO documentVO = new DocumentVO();
-            BeanUtils.copyProperties(document, documentVO);
-            List<Author> authorList = authorRepository.getAuthorsByDocumentId(document.getId());
-            documentVO.setAuthors(authorList);
-            resultList.add(documentVO);
-        }
-        return resultList;
+        Page<Document> documentPage = documentRepository.getAllByFieldId(fieldId, pageable);
+        Page<DocumentVO> documentVOPage = documentPage.map(this::documentVOToDO);
+        return documentVOPage;
+    }
+
+    private DocumentVO documentVOToDO(Document document){
+        DocumentVO documentVO = new DocumentVO();
+        BeanUtils.copyProperties(document, documentVO);
+        List<Author> authorList = authorRepository.getAuthorsByDocumentId(document.getId());
+        documentVO.setAuthors(authorList);
+        return documentVO;
     }
 }

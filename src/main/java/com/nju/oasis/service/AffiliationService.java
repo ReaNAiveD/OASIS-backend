@@ -3,6 +3,7 @@ package com.nju.oasis.service;
 import com.nju.oasis.controller.VO.DocumentVO;
 import com.nju.oasis.controller.VO.ResultVO;
 import com.nju.oasis.domain.statistics.AffiliationStatistics;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,6 @@ public interface AffiliationService {
 
     List<AffiliationStatistics> getAffiliationsWithMaxActivation(int num);
 
-    List<DocumentVO> getDocumentsOfAff(int affId, int page, int pageSize);
+    Page<DocumentVO> getDocumentsOfAff(int affId, int page, int pageSize);
 
 }

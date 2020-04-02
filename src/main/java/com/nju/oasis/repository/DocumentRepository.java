@@ -124,5 +124,9 @@ public interface DocumentRepository extends JpaRepository<Document, Integer> {
             "limit ?2, ?3", nativeQuery = true)
     List<Document> getAllByAffiliationId(int affId, int page, int pageSize);
 
-    List<Document> getAllByFieldId(int fieldId, Pageable pageable);
+    @Query(value = "select count(*) from document where document.id in" +
+            "(select document_id from document_author,author where  document_author.author_id=author.id and author.affiliation_id = ?1) ", nativeQuery = true)
+    int countAllByAffiliationId(int affId);
+
+    Page<Document> getAllByFieldId(int fieldId, Pageable pageable);
 }
