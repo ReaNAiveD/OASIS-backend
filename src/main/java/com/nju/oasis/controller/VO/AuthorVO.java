@@ -42,5 +42,8 @@ public class AuthorVO {
     private int affiliationId;
     //作者的领域专业，会按照活跃度降序
     private List<Map<String ,String>> fieldList;
+    private double activation;
+    private int totalDownloads;
+    private int totalCitations;
 
 }

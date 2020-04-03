@@ -59,6 +59,19 @@ public class AuthorService {
         Collections.reverse(fieldActivationCount);
         authorVO.setFieldList(fieldActivationCount);
 
+        //计算统计量
+        int totalDownloads = 0;
+        int totalCitations = 0;
+        double activation = 0;
+        for(Document document:documentList){
+           totalDownloads += document.getTotalDownload();
+           totalCitations += document.getTotalCitations();
+           activation += document.getActivation();
+        }
+        authorVO.setTotalDownloads(totalDownloads);
+        authorVO.setTotalCitations(totalCitations);
+        authorVO.setActivation(activation);
+
         return authorVO;
     }
 

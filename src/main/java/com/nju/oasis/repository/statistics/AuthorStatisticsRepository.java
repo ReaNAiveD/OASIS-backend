@@ -16,4 +16,5 @@ import java.util.Optional;
 @Repository
 public interface AuthorStatisticsRepository extends JpaRepository<AuthorStatistics, Integer> {
     List<AuthorStatistics> findAllByAuthorIdIn(List<Integer> authorIdList);
+    AuthorStatistics findByAuthorId(int authorId);
 }
