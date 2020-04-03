@@ -64,6 +64,8 @@ public class DbLoader implements CommandLineRunner {
 //        new Thread(this::loadAuthorStatistics).start();
         //更新author_statistics
 //        new Thread(this::updateAuthorStatistics).start();
+        //更新document
+//        new Thread(this::updateDocument_2).start();
 
     }
 
@@ -363,6 +365,23 @@ public class DbLoader implements CommandLineRunner {
             System.out.println("Create field: " + field.toString());
             //数据库操作：插入领域
             fieldRepository.save(field);
+        }
+    }
+
+    private void updateDocument_2(){
+        System.out.println("正在取出所有论文...");
+        List<Document> documentList = documentRepository.findAll();
+        System.out.println("开始处理论文");
+        int count = 0;
+        for(Document document:documentList){
+            count++;
+            System.out.println(count+": total " + documentList.size());
+            String conferenceInfo = document.getPublicationTitle();
+            //设置新的回忆
+            if(!conferenceInfo.endsWith(")")){
+                document.setPublicationTitle(conferenceInfo + " (ICSE)");
+            }
+            documentRepository.save(document);
         }
     }
 }
