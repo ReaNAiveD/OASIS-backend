@@ -51,6 +51,8 @@ public class StatisticsLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         //机构统计信息
 //        new Thread(this::loadAffiliationStatistics).start();
+
+//        new Thread(this::updateAffiliationStatistics).start();
     }
 
     private void loadAffiliationStatistics(){
@@ -83,6 +85,18 @@ public class StatisticsLoader implements CommandLineRunner {
             statistics.setActivation(totalActivation);
 
             affiliationStatisticsRepository.save(statistics);
+        }
+    }
+
+    private void updateAffiliationStatistics(){
+        int count = 0;
+        System.out.println("reading...");
+        List<AffiliationStatistics> affiliationStatisticsList = affiliationStatisticsRepository.findAll();
+        for(AffiliationStatistics affiliationStatistics:affiliationStatisticsList){
+            System.out.println(++count + ": total " + affiliationStatisticsList.size());
+            int aff_id = affiliationRepository.findByName(affiliationStatistics.getName()).get().getId();
+            affiliationStatistics.setAffiliationId(aff_id);
+            affiliationStatisticsRepository.save(affiliationStatistics);
         }
     }
 }
