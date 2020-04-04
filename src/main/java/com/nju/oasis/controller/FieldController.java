@@ -61,4 +61,9 @@ public class FieldController {
         return ResultVO.SUCCESS(fieldService.getHotFields());
     }
 
+    @GetMapping("/info")
+    public ResultVO getFieldInfo(@RequestParam("id") int id){
+        return ResultVO.SUCCESS(fieldService.getFieldInfo(id));
+    }
+
 }

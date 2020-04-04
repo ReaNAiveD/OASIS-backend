@@ -26,4 +26,6 @@ public interface FieldService {
 
     List<FieldRepository.HotFieldItem> getHotFields();
 
+    FieldRepository.FieldInfo getFieldInfo(int id);
+
 }

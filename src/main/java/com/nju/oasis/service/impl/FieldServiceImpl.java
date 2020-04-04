@@ -17,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,5 +84,10 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public List<FieldRepository.HotFieldItem> getHotFields() {
         return fieldRepository.findHotField();
+    }
+
+    @Override
+    public FieldRepository.FieldInfo getFieldInfo(int id) {
+        return fieldRepository.getFieldInfo(id);
     }
 }
