@@ -19,6 +19,7 @@ public class AffiliationStatistics {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private int affiliationId;
     private String name;
     private int authorCount;
     private int docCount;
