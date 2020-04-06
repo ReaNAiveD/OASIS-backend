@@ -55,12 +55,24 @@ public class MapService {
             填充内容
              */
             AuthorOfVertex authorOfVertex = new AuthorOfVertex();
-            Author author = authorList.get(i);
+            Author author = null;
+            for(Author author1: authorList){
+                if(authorId1==author1.getId()){
+                    author = author1;
+                    break;
+                }
+            }
             authorOfVertex.setId(author.getId());
             authorOfVertex.setName(author.getName());
             authorOfVertex.setAffiliation(author.getAffiliation());
             authorOfVertex.setAffiliationId(author.getAffiliationId());
-            AuthorStatistics authorStatistics = authorStatisticsList.get(i);
+            AuthorStatistics authorStatistics = null;
+            for(AuthorStatistics authorStatistics1:authorStatisticsList){
+                if(authorId1==authorStatistics1.getAuthorId()){
+                    authorStatistics = authorStatistics1;
+                    break;
+                }
+            }
             authorOfVertex.setDocumentCount(authorStatistics.getDocumentCount());
             //计算活跃度
             authorOfVertex.setActivation(authorStatistics.getActivation());
