@@ -108,7 +108,8 @@ public class MapService {
                 //计算共同作品数量
                 int workNum = 0;
                 for(int[] line: worksNum){
-                    if(line[0]==allAuthors.get(i) && line[1]==allAuthors.get(j)){
+                    if((line[0]==allAuthors.get(i) && line[1]==allAuthors.get(j))||
+                            line[1]==allAuthors.get(i) && line[0]==allAuthors.get(j)){
                         workNum = line[2];
                         break;
                     }
