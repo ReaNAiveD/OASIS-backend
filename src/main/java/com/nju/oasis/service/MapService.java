@@ -109,7 +109,7 @@ public class MapService {
                 int workNum = 0;
                 for(int[] line: worksNum){
                     if((line[0]==allAuthors.get(i) && line[1]==allAuthors.get(j))||
-                            line[1]==allAuthors.get(i) && line[0]==allAuthors.get(j)){
+                            (line[1]==allAuthors.get(i) && line[0]==allAuthors.get(j))){
                         workNum = line[2];
                         break;
                     }
