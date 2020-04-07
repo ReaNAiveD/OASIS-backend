@@ -118,7 +118,7 @@ public class DbLoader implements CommandLineRunner {
         //获取所有的分类信息
         List<Field> fieldList = fieldRepository.findAll();
         //为文章设置分类
-        setFieldForDocument(fieldList, document);
+//        setFieldForDocument(fieldList, document);
 
 //            System.out.println(document.toString());
 
@@ -212,13 +212,16 @@ public class DbLoader implements CommandLineRunner {
         List<Document> documentList = documentRepository.findAll();
         //获取所有的分类信息
         List<Field> fieldList = fieldRepository.findAll();
+        List<Double> fieldPossibilityList = getFieldPossibility();
+
         System.out.println("开始处理论文");
         int count = 0;
         for(Document document:documentList){
             count++;
             System.out.println(count+":已经处理了"+count/1400.0+"%的文章了，共1200");
             document.setTotalCitations(document.getTotalDownload()/50);
-            setFieldForDocument(fieldList, document);
+            //给文章设置领域信息
+            setFieldForDocument(fieldList, fieldPossibilityList, document);
             documentRepository.save(document);
         }
     }
@@ -249,7 +252,26 @@ public class DbLoader implements CommandLineRunner {
         }
     }
 
-    private void setFieldForDocument(List<Field> fieldList, Document document){
+    private List<Double> getFieldPossibility(){
+        List<List<String>> table = ReadUtil.readCSV(acemap_field_path);
+        List<Double> rankList = new ArrayList<>();
+        int total = 0;
+        for(List<String> line:table){
+            int num = Integer.parseInt(line.get(2));
+            total += num;
+        }
+        int sum = 0;
+        for(List<String> line:table){
+            int num = Integer.parseInt(line.get(2));
+            sum += num;
+            double rankPoint = sum/((double)total);
+            rankList.add(rankPoint);
+        }
+        System.out.println(rankList);
+        return rankList;
+    }
+
+    private void setFieldForDocument(List<Field> fieldList, List<Double> fieldPossibility, Document document){
         //去除括号
         String target = document.getKeywords().replaceAll("\\(","")
                 .replaceAll("\\)","");
@@ -269,9 +291,16 @@ public class DbLoader implements CommandLineRunner {
             }
         }
         if (flag==false){
-            //无法分辨出是哪个类的，随机指派
-            int i = (int)(Math.random()*fieldList.size());
-            document.setFieldId(fieldList.get(i).getId());
+            //无法分辨出是哪个类的，随机指派，不过按照文章的先验概率
+            document.setFieldId(0);
+            double randF = Math.random();//0-0.9999之间
+            for(int i=0;i<fieldPossibility.size();i++){
+                //确定属于哪个领域
+                if(randF<fieldPossibility.get(i)){
+                    document.setFieldId(fieldList.get(i).getId());
+                    break;
+                }
+            }
         }
     }
 

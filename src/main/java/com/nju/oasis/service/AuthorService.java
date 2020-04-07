@@ -108,6 +108,9 @@ public class AuthorService {
 
     public ResultVO getFieldDocumentAndActivation(int id){
         List<Map<String, String>> fieldActivationCount = fieldRepository.findFieldAndActivationByAuthor(id);
+        if(fieldActivationCount.size()>5){
+            fieldActivationCount = fieldActivationCount.subList(0, 5);
+        }
         List<Map<String, String>> document = documentRepository.findDocWithFieldByAuthor(id);
         Map<String, Object> result = new HashMap<>();
         result.put("fields", fieldActivationCount);

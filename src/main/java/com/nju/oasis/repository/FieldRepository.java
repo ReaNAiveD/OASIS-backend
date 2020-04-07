@@ -18,7 +18,7 @@ public interface FieldRepository extends JpaRepository<Field, Integer> {
     @Query(value = "select field_id, field.field as field_name, sum(docActivation) as activation from " +
             "(select id, field_id, (document.total_citations+5)/(2025-document.publication_year) as docActivation from document where id in " +
             "(select document_id from document_author where author_id=?)) docAct " +
-            "left join field on docAct.field_id=field.id group by field_id order by activation", nativeQuery = true)
+            "left join field on docAct.field_id=field.id group by field_id order by activation desc ", nativeQuery = true)
     List<Map<String, String>> findFieldAndActivationByAuthor(int authorId);
 
     @Query(value = "select field, field_id as fieldId, sum((document.total_citations+5)/(2025-document.publication_year)) as fieldActivation, count(document.id) as docCount from document " +
