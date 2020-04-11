@@ -205,7 +205,7 @@ public class DbLoader implements CommandLineRunner {
     }
 
     /*
-    更新文章信息
+    更新文章信息，领域信息
      */
     private void updateDocument(){
         System.out.println("正在取出所有论文...");
@@ -274,9 +274,10 @@ public class DbLoader implements CommandLineRunner {
     private void setFieldForDocument(List<Field> fieldList, List<Double> fieldPossibility, Document document){
         //去除括号
         String target = document.getKeywords().replaceAll("\\(","")
-                .replaceAll("\\)","");
+                .replaceAll("\\)","").replaceAll(";", " ");
         //分割出单词
         List<String> documentKeywords = Arrays.asList(target.split(",|\\s+"));
+        System.out.println(documentKeywords);
         Boolean flag = false;
         for(Field field:fieldList){
             for(String core:field.getKeywords().split(",")){
