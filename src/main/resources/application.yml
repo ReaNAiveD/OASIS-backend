@@ -13,6 +13,10 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 55MB
 
 management:
   endpoints:
