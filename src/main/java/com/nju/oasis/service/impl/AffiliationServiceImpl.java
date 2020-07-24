@@ -1,6 +1,7 @@
 package com.nju.oasis.service.impl;
 
 import com.nju.oasis.controller.VO.AffiliationInfoVO;
+import com.nju.oasis.controller.VO.CooperateAffiliationVO;
 import com.nju.oasis.controller.VO.DocumentVO;
 import com.nju.oasis.controller.VO.ResultVO;
 import com.nju.oasis.domain.Affiliation;
@@ -94,5 +95,30 @@ public class AffiliationServiceImpl implements AffiliationService {
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<DocumentVO> resultPage = new PageImpl<>(resultList, pageable, totalNum);
         return resultPage;
+    }
+
+    @Override
+    public ResultVO getCooperateAff(int affId) {
+        List<CooperateAffiliationVO> cooperateAffVOList = new ArrayList<>();
+        List<Map<String, Object>> repoList = affiliationRepository.cooperateAffiliations(affId);
+        for(Map<String, Object> item: repoList){
+            CooperateAffiliationVO affVO = new CooperateAffiliationVO();
+            affVO.setAffiliationId(String.valueOf(item.get("affiliation_id")));
+            affVO.setAffiliationName((String) item.get("affiliation_name"));
+            affVO.setCooperateCount(String.valueOf(item.get("docu_count")));
+            cooperateAffVOList.add(affVO);
+        }
+        cooperateAffVOList.sort((a1, a2)->{
+            if(Integer.parseInt(a1.getCooperateCount())>Integer.parseInt(a2.getCooperateCount())){
+                return -1;
+            }
+            else if(Integer.parseInt(a1.getCooperateCount())==Integer.parseInt(a2.getCooperateCount())){
+                return 0;
+            }
+            else {
+                return 1;
+            }
+        });
+        return ResultVO.SUCCESS(cooperateAffVOList);
     }
 }

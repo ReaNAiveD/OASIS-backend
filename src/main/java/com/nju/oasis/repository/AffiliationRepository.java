@@ -54,4 +54,22 @@ public interface AffiliationRepository extends JpaRepository<Affiliation, Intege
             "    left join affiliation a2 on a.affiliation_id = a2.id where d.field_id=? and affiliation_id<>0) aff_doc\n" +
             "group by affiliation_id, affiliation order by activation desc", nativeQuery = true)
     List<Map<String, String>> fieldActivationStatistic(int id);
+
+    /**
+     * 根据机构id获得合作的机构。（机构id, 机构名, 合作数）的列表
+     * @param affiliationId
+     * @return
+     */
+    @Query(value = "select b.id as affiliation_id, b.name as affiliation_name, count(*) as docu_count from " +
+            "(" +
+            "select aff.id as id, aff.name as name, da.document_id as document_id, count(*) as c from document_author da, author a, affiliation aff where da.author_id=a.id and a.affiliation_id=aff.id and da.document_id in " +
+            "(" +
+            "select distinct da1.document_id from document_author da1 where da1.author_id in " +
+            "(select a1.id from author a1 where a1.affiliation_id=?1)" +
+            ") " +
+            "group by aff.id, aff.name, da.document_id" +
+            ") b " +
+            "group by b.id, b.name", nativeQuery = true)
+    List<Map<String, Object>> cooperateAffiliations(int affiliationId);
+
 }

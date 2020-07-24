@@ -22,4 +22,6 @@ public interface AffiliationService {
 
     Page<DocumentVO> getDocumentsOfAff(int affId, int page, int pageSize);
 
+    public ResultVO getCooperateAff(int affId);
+
 }

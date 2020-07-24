@@ -51,4 +51,9 @@ public class AffiliationController {
 
     }
 
+    @GetMapping("/cooperate/aff")
+    public ResultVO getCooperateAffiliations(@RequestParam("id") int affId){
+        return affiliationService.getCooperateAff(affId);
+    }
+
 }

@@ -117,8 +117,9 @@ public class DbLoader implements CommandLineRunner {
         document.setTotalCitations(document.getTotalDownload()/50);
         //获取所有的分类信息
         List<Field> fieldList = fieldRepository.findAll();
+        List<Double> fieldPossibilityList = getFieldPossibility();
         //为文章设置分类
-//        setFieldForDocument(fieldList, document);
+        setFieldForDocument(fieldList, fieldPossibilityList, document);
 
 //            System.out.println(document.toString());
 
@@ -252,7 +253,7 @@ public class DbLoader implements CommandLineRunner {
         }
     }
 
-    private List<Double> getFieldPossibility(){
+    public List<Double> getFieldPossibility(){
         List<List<String>> table = ReadUtil.readCSV(acemap_field_path);
         List<Double> rankList = new ArrayList<>();
         int total = 0;
@@ -271,7 +272,7 @@ public class DbLoader implements CommandLineRunner {
         return rankList;
     }
 
-    private void setFieldForDocument(List<Field> fieldList, List<Double> fieldPossibility, Document document){
+    public void setFieldForDocument(List<Field> fieldList, List<Double> fieldPossibility, Document document){
         //去除括号
         String target = document.getKeywords().replaceAll("\\(","")
                 .replaceAll("\\)","").replaceAll(";", " ");
@@ -331,6 +332,7 @@ public class DbLoader implements CommandLineRunner {
         }
     }
 
+    //更新作者统计信息
     private void updateAuthorStatistics(){
         System.out.println("reading...");
         List<AuthorStatistics> authorStatisticsList = authorStatisticsRepository.findAll();
@@ -343,6 +345,7 @@ public class DbLoader implements CommandLineRunner {
         System.out.println("end");
     }
 
+    //根据作者关键字决定作者的领域
     private String getDomains(String authorKeywords){
         String[] keywordList = authorKeywords.split("[;,]");
         HashMap<String, Integer> keywordMap = new HashMap<>();
@@ -407,7 +410,7 @@ public class DbLoader implements CommandLineRunner {
             count++;
             System.out.println(count+": total " + documentList.size());
             String conferenceInfo = document.getPublicationTitle();
-            //设置新的回忆
+            //设置新的会议
             if(!conferenceInfo.endsWith(")")){
                 document.setPublicationTitle(conferenceInfo + " (ICSE)");
             }
