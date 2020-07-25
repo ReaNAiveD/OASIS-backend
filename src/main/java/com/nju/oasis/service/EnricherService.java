@@ -79,10 +79,11 @@ public class EnricherService {
          */
         Document document = new Document();
         document.setTitle(getCell(record, enrichForm.getTitle().getCsvColumn()));
+        System.out.println("loadRecord. title: " + document.getTitle());
         document.setPublicationTitle(getCell(record, enrichForm.getPublicationTitle().getCsvColumn()));
         String publicationYearStr = getCell(record, enrichForm.getPublicationYear().getCsvColumn());
         if(StringUtils.isNumeric(publicationYearStr)){
-            document.setVolume(Integer.parseInt(publicationYearStr));
+            document.setPublicationYear(Integer.parseInt(publicationYearStr));
         }
         String volumeStr = getCell(record, enrichForm.getVolume().getCsvColumn());
         if(StringUtils.isNumeric(volumeStr)){

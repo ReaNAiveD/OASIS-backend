@@ -268,7 +268,6 @@ public class DbLoader implements CommandLineRunner {
             double rankPoint = sum/((double)total);
             rankList.add(rankPoint);
         }
-        System.out.println(rankList);
         return rankList;
     }
 
@@ -278,7 +277,7 @@ public class DbLoader implements CommandLineRunner {
                 .replaceAll("\\)","").replaceAll(";", " ");
         //分割出单词
         List<String> documentKeywords = Arrays.asList(target.split(",|\\s+"));
-        System.out.println(documentKeywords);
+        System.out.println("document keywords: "+ documentKeywords.toString());
         Boolean flag = false;
         for(Field field:fieldList){
             for(String core:field.getKeywords().split(",")){

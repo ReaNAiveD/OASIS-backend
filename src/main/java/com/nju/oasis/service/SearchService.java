@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -100,6 +101,7 @@ public class SearchService {
     }
 
     private List<Integer> searchCombined(String combined){
+        System.out.println("Service search starts...");
         String[] searchItem;
         if(combined.contains("&")){
             searchItem = combined.split("&");
@@ -110,10 +112,13 @@ public class SearchService {
         else{
             searchItem = combined.split("\\s+");
         }
+        System.out.println("searchItems: "+ Arrays.toString(searchItem));
         List<Integer> idList = searchAll(searchItem[0]);
         for(String item: searchItem){
             idList.retainAll(searchAll(item));
         }
+        System.out.println("idList: "+ idList.toString());
+        System.out.println("Service search ends...");
         return idList;
     }
 
