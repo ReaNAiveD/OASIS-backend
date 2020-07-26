@@ -66,4 +66,10 @@ public class AuthorController {
         return ResultVO.SUCCESS(authorService.getComplexAuthorCoworkerLink(id));
     }
 
+    @GetMapping("/coworkers/recommend")
+    @ResponseBody
+    public ResultVO getRecommendCoworkers(@RequestParam("id")int id){
+        return authorService.getRecommendCoworkers(id);
+    }
+
 }

@@ -2,6 +2,7 @@ package com.nju.oasis.service;
 
 import com.nju.oasis.controller.VO.AuthorVO;
 import com.nju.oasis.controller.VO.CoworkerLinkVO;
+import com.nju.oasis.controller.VO.CoworkerRecommendVO;
 import com.nju.oasis.controller.VO.ResultVO;
 import com.nju.oasis.domain.Author;
 import com.nju.oasis.domain.statistics.AuthorStatistics;
@@ -21,6 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -115,6 +118,42 @@ public class AuthorService {
         Map<String, Object> result = new HashMap<>();
         result.put("fields", fieldActivationCount);
         result.put("documents", document);
+        return ResultVO.SUCCESS(result);
+    }
+
+    public ResultVO getRecommendCoworkers(int authorId){
+        List<CoworkerRecommendVO> result = new ArrayList<>();
+        List<AuthorRepository.CoworkerRecommend> coworkerRecommends = authorRepository.getRecommendedCoworkers(authorId);
+        List<AuthorRepository.CoworkerRecommend> fieldLikeCoworkerRecommends = authorRepository.getFieldLikeCoworkers(authorId);
+//        Instant start = Instant.now();
+        double maxScore = 1;
+        for (AuthorRepository.CoworkerRecommend coworker: coworkerRecommends) {
+            CoworkerRecommendVO ncoworker = new CoworkerRecommendVO(coworker);
+            maxScore = Math.max(maxScore, coworker.getScore());
+            ncoworker.setScore(coworker.getScore() / maxScore);
+            result.add(ncoworker);
+        }
+        maxScore = 1;
+        for (AuthorRepository.CoworkerRecommend coworker: fieldLikeCoworkerRecommends) {
+            CoworkerRecommendVO ncoworker = new CoworkerRecommendVO(coworker);
+            double tscore = Math.pow(coworker.getScore(), 0.5);
+            maxScore = Math.max(maxScore, tscore);
+            ncoworker.setScore(tscore / maxScore);
+            boolean found = false;
+            for (AuthorRepository.CoworkerRecommend n_coworker: result) {
+                if (n_coworker.getId() == coworker.getId()){
+                    n_coworker.setScore(n_coworker.getScore() + ncoworker.getScore());
+                    found=true;
+                    break;
+                }
+            }
+            if (!found){
+                result.add(ncoworker);
+            }
+        }
+//        Instant end = Instant.now();
+//        System.out.println(Duration.between(start, end));
+        result.sort(Collections.reverseOrder());
         return ResultVO.SUCCESS(result);
     }
 

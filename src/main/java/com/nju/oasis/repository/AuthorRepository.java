@@ -96,6 +96,22 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
             "where fromId<document_author.author_id", nativeQuery = true)
     List<CoworkerLinks> getComplexCoworkerLinks(int authorId);
 
+    @Query(value = "select author_id as id, author.name as authorName, author.affiliation_id as affiliationId, author_affiliation as affiliationName, count(document_id) as score from (select author_id, document_id from document_author where document_id in (select distinct document_id from document_author where author_id in (select author_id from document_author where document_id in (select document_id from document_author where author_id=?1)))) ad " +
+            "left join author on author_id=author.id where author_id not in (select author_id from document_author where document_id in (select document_id from document_author where author_id=?1)) group by author_id order by score desc", nativeQuery = true)
+    List<CoworkerRecommend> getRecommendedCoworkers(int authorId);
+
+    @Query(value = "select author.id, author.name as authorName, affdoc.affiliation_id as affiliationId, author.author_affiliation as affiliationName, affdoc.doc_count * pow(sum(fielddoc.doc_count), 3) as score from author inner join (\n" +
+            "    select author.affiliation_id, count(distinct document_id) as doc_count from document_author left join author on document_author.author_id = author.id where document_id in (\n" +
+            "    select document_id from document_author where author_id in (\n" +
+            "    select id from author where affiliation_id in (select affiliation_id from author where id=?1)\n" +
+            ")) and author.affiliation_id<>0 and author.affiliation_id not in (select affiliation_id from author where id=?1) group by author.affiliation_id) affdoc on author.affiliation_id=affdoc.affiliation_id\n" +
+            "left join document_author da on author.id = da.author_id\n" +
+            "left join document d on da.document_id = d.id\n" +
+            "inner join (select field_id, count(id) as doc_count from document where id in (select document_id from document_author where author_id=?1) group by field_id) fielddoc on d.field_id=fielddoc.field_id\n" +
+            "where author.id<>?1\n" +
+            "group by author.id, affdoc.affiliation_id order by score desc", nativeQuery = true)
+    List<CoworkerRecommend> getFieldLikeCoworkers(int authorId);
+
     interface CoworkerLinks {
         int getFromId();
         String getFromAuthor();
@@ -111,6 +127,15 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
         double getToActivation();
         int getDocId();
         String getDoc();
+    }
+
+    interface CoworkerRecommend {
+        int getId();
+        String getAuthorName();
+        int getAffiliationId();
+        String getAffiliationName();
+        double getScore();
+        void setScore(double score);
     }
 
 }
