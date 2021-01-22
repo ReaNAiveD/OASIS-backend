@@ -8,7 +8,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://101.37.80.37:3306/oasis?useSSL=false&&serverTimezone=GMT%2B8&useLegacyDatetimeCode=false
     username: root
-    password: 123456
+    password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
